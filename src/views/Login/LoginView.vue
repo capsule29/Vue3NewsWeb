@@ -1,59 +1,57 @@
 <template>
-    <div class="big-background">
-        <span>欢迎访问胶囊科技有限公司新闻网</span>
-        <div class="mainBox" :style="mainBoxStyleObject">
-            <el-space direction="vertical">
-                <UsernameInput />
-                <PasswordInput />
-            </el-space>
+  <div class="big-background">
+    <!-- <span style="top: 100px; font-size: 24px">胶囊科技有限公司新闻网</span> -->
+
+    <el-card class="center">
+      <template #header>
+        <div class="card-header">
+          <span>LOGIN</span>
         </div>
-    </div>
+      </template>
+      <UsernameInput />
+      <br />
+      <PasswordInput />
+
+      <template #footer>
+        <el-button type="success" style="min-width: 80px"> 登录 </el-button>
+      </template>
+    </el-card>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+// import {  ref,  reactive } from 'vue'
 
-import UsernameInput from '@/components/CustomerLogin/UsernameInput.vue'
-import PasswordInput from '@/components/CustomerLogin/PasswordInput.vue'
-
-const width = (600).toString() + 'px'
-const height = (300).toString() + 'px'
-const mainBoxStyleObject = reactive({
-    width,
-    height,
-})
-
+import UsernameInput from '@/components/Login/UsernameInput.vue'
+import PasswordInput from '@/components/Login/PasswordInput.vue'
 </script>
 
 <style scoped>
 * {
-    padding: 0px;
-    margin: 0px;
-    box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
 }
 
-span {
-    position: absolute;
-    font-size: 24px;
-    top: 50px;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.center {
+  min-height: 200px;
+  max-width: 480px;
+  position: relative;
+  left: 65%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .big-background {
-    width: 100%;
-    height: 100vh;
-    /* background: linear-gradient(to bottom, #B5E5D9, #ADDDD1); */
+  width: 100%;
+  height: 100vh;
+  /* background: linear-gradient(to bottom, #B5E5D9, #ADDDD1); */
+  background: url('../../assets/bg2.png') no-repeat;
+  background-size: contain;
 }
 
-.mainBox {
-    background-color: #3B8590;
-    border: 2px solid #3B8590;
-    border-radius: 10px;
-    box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.2);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.inputClass {
+  position: relative;
+  top: 100px;
 }
 </style>
