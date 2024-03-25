@@ -9,15 +9,16 @@
                             <NewsCard :index="index" :news_id="item.news_id" :news_title="item.news_title"
                                 :news_content="item.news_content" :news_praise_number="item.news_praise_number"
                                 :news_star_number="item.news_star_number" :news_created_at="item.news_created_at"
-                                @addReduce="addRudeuceFunc" />
-                            <NewsComment v-if="isOpenComment[index]" />
+                                :is_open_comment_status="item.is_open_comment_status" @addReduce="addRudeuceFunc"
+                                @openComment="openComment" />
+                            <NewsComment v-if="item.is_open_comment_status" />
                             <!-- 分割线 -->
                             <el-divider v-show="index != newsData.length - 1" />
                         </li>
                     </ul>
-
                 </el-card>
             </el-col>
+
             <el-col :span="8">
                 <el-card style="min-width: 300px;margin-bottom: 20px;">
                     <HotNews />
@@ -53,12 +54,14 @@ interface newsDataInterface {
     news_star_number: number
     news_created_at: Date
     // [propName: string]: any
+    // 非接口参数
+    is_open_comment_status: boolean
 }
 
 
 /* ====================数据==================== */
 let newsData: Array<newsDataInterface> = reactive([])
-let isOpenComment: Array<boolean> = reactive([])
+// let isOpenComment: Array<boolean> = reactive([])
 /* ====================函数==================== */
 
 /**
@@ -77,7 +80,7 @@ const getData = async (): Promise<void> => {
         .finally(function () {
         });
     for (let i = 0; i < newsData.length; i++) {
-        isOpenComment.push(false)
+        newsData[i].is_open_comment_status = false
     }
 }
 
@@ -117,7 +120,7 @@ const addRudeuceFunc = async (is_add: boolean, index: number, what: string, news
                 break;
         }
     }
-    // 弹窗
+    // 修改成功弹窗
     addRedeceSuccess(is_add, what)
 }
 /**
@@ -126,7 +129,6 @@ const addRudeuceFunc = async (is_add: boolean, index: number, what: string, news
  * @param news_id 
  */
 const addReduceSql = async (is_add: boolean, what: string, news_id: number): Promise<void> => {
-
     const url: string = "/api/news/addreduce"
     await axios.get(url, {
         params: {
@@ -141,7 +143,6 @@ const addReduceSql = async (is_add: boolean, what: string, news_id: number): Pro
 
     })
 }
-
 
 /**
  * 弹窗函数
@@ -163,6 +164,14 @@ const addRedeceSuccess = (is_add: boolean, what: string): void => {
     })
 }
 
+
+const openComment = (index: number): void => {
+    console.log(newsData[index].is_open_comment_status);
+    newsData[index].is_open_comment_status = !newsData[index].is_open_comment_status
+    console.log('评论更新完毕');
+    console.log(newsData[index].is_open_comment_status);
+
+}
 
 /* ====================生命周期==================== */
 /**

@@ -43,7 +43,7 @@ span {
 .big-background {
     width: 100%;
     height: 100vh;
-    background: linear-gradient(to bottom, #B5E5D9, #ADDDD1);
+    /* background: linear-gradient(to bottom, #B5E5D9, #ADDDD1); */
 }
 
 .mainBox {

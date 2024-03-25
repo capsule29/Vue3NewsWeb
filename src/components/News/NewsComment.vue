@@ -1,12 +1,12 @@
 // 新闻评论区
 <template>
 
-    <div> </div>
+    <div> 我是评论区 </div>
 
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+// import { ref, reactive } from 'vue'
 
 </script>
 

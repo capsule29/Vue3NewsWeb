@@ -39,10 +39,17 @@
                 </el-icon>
                 <span v-if="is_star">已</span>收藏 {{ news_star_number }}
             </el-button>
-            评论
-            <el-icon class="el-icon--bottom">
+
+
+            <el-button type="pain" :icon="ChatLineSquare" text
+                @click="$emit('openComment', index), changeCommentString"> {{
+                is_open_str
+            }}</el-button>
+
+
+            <!-- <el - icon class=" el-icon--bottom">
                 <ChatLineSquare />
-            </el-icon>
+                </el-icon> -->
         </div>
 
     </div>
@@ -51,7 +58,7 @@
 <script setup lang='ts'>
 
 /* ====================导入==================== */
-import { ref, type Ref } from 'vue'
+import { onBeforeUpdate, onUpdated, ref, type Ref } from 'vue'
 import {
     ArrowUpBold,
     Star,
@@ -60,7 +67,7 @@ import {
 } from '@element-plus/icons-vue'
 
 /* ====================父组件传参==================== */
-defineProps<{
+let props = defineProps<{
     index: number
     news_id: number
     news_title: string
@@ -70,6 +77,7 @@ defineProps<{
     news_star_number: number
     news_created_at: Date
     // img: string
+    is_open_comment_status: boolean
 }>()
 
 /* ====================变量==================== */
@@ -77,8 +85,25 @@ defineProps<{
 let is_star: Ref<boolean> = ref(false);
 // 该新闻是否被用户点赞
 let is_praise: Ref<boolean> = ref(false);
+// 评论是否展开
+let is_open_str: Ref<string> = ref('展开评论')
 
+/* ====================函数==================== */
 
+const changeCommentString = () => {
+    if (props.is_open_comment_status)
+        is_open_str.value = '折叠评论'
+    else
+        is_open_str.value = '展开评论'
+}
+
+/* ====================生命周期==================== */
+onBeforeUpdate(() => {
+    changeCommentString()
+})
+// onUpdated(() => {
+//     changeCommentString()
+// })
 </script>
 
 <style scoped>
