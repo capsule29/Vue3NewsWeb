@@ -29,12 +29,15 @@ export default defineConfig({
     // 开发环境有效
     server: {
         proxy: {
+            // http://localhost:5173/api ===> http://124.223.43.79:233
             '/api': {
                 target: "http://124.223.43.79:233",
+                changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, '')
             }
         }
     },
+    // 起个别名，在引用资源时，可以用‘@/资源路径’直接访问
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url))

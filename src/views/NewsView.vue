@@ -11,7 +11,6 @@
 </template>
 
 <script setup lang="ts">
-// import { ref, reactive } from 'vue'
 import Header from '@/components/News/NewsHeader.vue'
 import Main from '@/components/News/NewsMain.vue'
 </script>

@@ -58,7 +58,7 @@
 <script setup lang='ts'>
 
 /* ====================导入==================== */
-import { onBeforeUpdate, onUpdated, ref, type Ref } from 'vue'
+import { onBeforeUpdate, ref, type Ref } from 'vue'
 import {
     ArrowUpBold,
     Star,
@@ -75,7 +75,7 @@ let props = defineProps<{
     news_img?: string
     news_praise_number: number
     news_star_number: number
-    news_created_at: Date
+    news_created_at: string
     // img: string
     is_open_comment_status: boolean
 }>()
