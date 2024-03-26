@@ -63,7 +63,7 @@ let input_user_name: Ref<string> = ref('')
 let input_password: Ref<string> = ref('')
 
 /*======================登录====================== */
-const login = async (user_name: string, password: string, is_admin: string) => {
+const login = async (user_name: string, password: string, is_admin: string): Promise<void> => {
   if (user_name == '') {
     startMessageAlert('error', '请输入用户名')
     return
@@ -78,7 +78,7 @@ const login = async (user_name: string, password: string, is_admin: string) => {
   }
 
   await axios
-    .get('/api/login', {
+    .get('/api/login/', {
       params: {
         user_name,
         password,
@@ -89,8 +89,10 @@ const login = async (user_name: string, password: string, is_admin: string) => {
       if (typeof solution === 'object') {
         // 添加cookie
         const data = solution.data
-        document.cookie = `user_name=${data.user_name};user_name=${data.user_name};is_admin=${data.is_admin}`
-        startMessageAlert('success', '登陆成功123')
+        document.cookie = `user_id=${data.user_id};`
+        document.cookie = `user_name = ${data.user_name};`
+        document.cookie = `is_admin = ${data.is_admin}`
+        startMessageAlert('success', '登陆成功')
         // vue router 跳转
         if (data.is_admin == 'true') {
           router.push('/admin')
@@ -107,6 +109,7 @@ const login = async (user_name: string, password: string, is_admin: string) => {
       startMessageAlert('error', '登录失败，请重新验证账号密码或权限')
       throw err
     })
+    .finally(function () {})
 }
 
 /**

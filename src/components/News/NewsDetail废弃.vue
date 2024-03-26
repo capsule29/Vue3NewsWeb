@@ -1,6 +1,7 @@
-<!-- 新闻评论区 -->
+<!-- 废弃 -->
+<!-- 新闻卡片点进去之后的新闻详情 -->
 <template>
-  <div>我是评论区</div>
+  <div></div>
 </template>
 
 <script setup lang="ts">

@@ -4,9 +4,11 @@
     <el-row :gutter="60">
       <el-col :span="16">
         <el-card style="min-width: 800px">
-          <ul>
+          <ul v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
+            <!-- <li :key="index" v-for="(item, index) in newsData" v-if="item < count"> -->
             <li :key="index" v-for="(item, index) in newsData">
               <NewsCard
+                v-if="index <= count"
                 :index="index"
                 :news_id="item.news_id"
                 :news_title="item.news_title"
@@ -20,23 +22,25 @@
               />
               <NewsComment v-if="item.is_open_comment_status" />
               <!-- 分割线 -->
-              <el-divider v-show="index != newsData.length - 1" />
+              <el-divider v-show="index <= count" />
             </li>
           </ul>
+          <div style="text-align: center">
+            <p v-show="loading" v-loading="true"></p>
+            <p v-show="noMore">都被你看光了</p>
+          </div>
         </el-card>
       </el-col>
 
+      <!-- 右侧边栏 -->
       <el-col :span="8">
-        <el-card style="min-width: 300px; margin-bottom: 20px">
-          <HotNews />
+        <el-card
+          :key="index"
+          v-for="(item, index) in NewsAsides"
+          style="min-width: 300px; margin-bottom: 20px"
+        >
+          <NewsAside :title="item.title" :content="item.content" />
         </el-card>
-        <!-- <el-card style="min-width: 300px; margin-bottom: 20px">
-          <HotNews />
-        </el-card>
-        <el-card style="min-width: 300px; margin-bottom: 20px">
-          <HotNews /> 
-        </el-card>-->
-        <NewsTest />
       </el-col>
     </el-row>
   </div>
@@ -44,10 +48,9 @@
 
 <script setup lang="ts">
 /* ====================导入==================== */
-import { reactive, onMounted } from 'vue'
-// import type { Ref } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import NewsCard from '@/components/News/NewsCard.vue'
-import HotNews from '@/components/News/HotNews.vue'
+import NewsAside from '@/components/News/NewsAside.vue'
 import NewsComment from '@/components/News/NewsComment.vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
@@ -67,7 +70,6 @@ interface newsDataInterface {
 
 /* ====================数据==================== */
 let newsData: Array<newsDataInterface> = reactive([])
-// let isOpenComment: Array<boolean> = reactive([])
 /* ====================函数==================== */
 
 /**
@@ -181,10 +183,30 @@ const addRedeceSuccess = (is_add: boolean, what: string): void => {
 const openComment = (index: number): void => {
   console.log(newsData[index].is_open_comment_status)
   newsData[index].is_open_comment_status = !newsData[index].is_open_comment_status
-  // console.log('评论更新完毕');
-  // console.log(newsData[index].is_open_comment_status);
 }
 
+/*=======================无限滚动内容/*======================= */
+const count = ref(5)
+const loading = ref(false)
+const noMore = computed(() => count.value >= newsData.length)
+const disabled = computed(() => loading.value || noMore.value)
+const load = () => {
+  loading.value = true
+  setTimeout(() => {
+    count.value += 1
+    loading.value = false
+  }, 2000)
+}
+/* ====================NewsAside==================== */
+interface NewsAsideInterface {
+  title: string
+  content: string
+}
+let NewsAsides: NewsAsideInterface[] = [
+  { title: '热点新闻1', content: '哈哈1' },
+  { title: '热点新闻2', content: '哈哈2' },
+  { title: '热点新闻3', content: '哈哈3' }
+]
 /* ====================生命周期==================== */
 /**
  * 创建完毕生命周期
