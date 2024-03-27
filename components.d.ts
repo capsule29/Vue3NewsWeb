@@ -37,6 +37,7 @@ declare module 'vue' {
     ElText: typeof import('element-plus/es')['ElText']
     Header: typeof import('./src/components/Header.vue')['default']
     HotNews: typeof import('./src/components/News/HotNews.vue')['default']
+    InfoManage: typeof import('./src/components/InfoManage.vue')['default']
     Menu: typeof import('./src/components/Admin/Menu.vue')['default']
     MenuAside: typeof import('./src/components/Admin/MenuAside.vue')['default']
     MenuView: typeof import('./src/components/Admin/MenuView.vue')['default']

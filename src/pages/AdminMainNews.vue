@@ -1,9 +1,11 @@
 <template>
-  <div></div>
+  <div>news</div>
+  <InfoManage />
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+// import { ref, reactive } from 'vue'
+import InfoManage from '@/components/InfoManage.vue'
 </script>
 
 <style scoped></style>

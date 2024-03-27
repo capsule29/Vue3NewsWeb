@@ -12,32 +12,20 @@ const routes = [
     {
         path: '/admin',
         component: () => import('@/layout/AdminLayout.vue'),
-        // children: [
-        //     {
-        //         path: '/user',
-        //         component: () => import('@/')
-        //     }, {
-        //         path: '/news',
-        //         component: () => import('@/')
-        //     },
-        // ]
+        children: [
+            {
+                path: '/admin/user',
+                component: () => import('@/pages/AdminMainUser.vue')
+            }, {
+                path: '/admin/news',
+                component: () => import('@/pages/AdminMainNews.vue')
+            },
+        ]
     },
-    /**
-     * 或者
-     * import RegView from '@/views/costumers/RegView.vue';
-     * .....
-     * { path: '/reg', component: RegView }
-     */
+
 ]
-/*
-const router = createRouter({
-    history: createWebHashHistory(),
-    routes // routes: routes
-})
-export default router
-*/
 export default createRouter({
     history: createWebHashHistory(),
-    routes // routes: routes
+    routes
 })
 
