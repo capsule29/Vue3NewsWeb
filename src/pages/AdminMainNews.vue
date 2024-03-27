@@ -1,6 +1,6 @@
 <template>
-  <div>news</div>
-  <InfoManage />
+    <div>news</div>
+    <InfoManage type="news" />
 </template>
 
 <script setup lang="ts">
