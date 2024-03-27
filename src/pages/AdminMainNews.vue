@@ -1,5 +1,4 @@
 <template>
-    <div>news</div>
     <InfoManage type="news" />
 </template>
 

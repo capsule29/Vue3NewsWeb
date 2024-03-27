@@ -37,5 +37,4 @@ import Main from '@/views/NewsMain.vue'
     /*滚动条隐藏 */
     overflow: visible;
 }
-
 </style>

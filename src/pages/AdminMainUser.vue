@@ -1,5 +1,4 @@
 <template>
-    <div>user</div>
     <InfoManage type='user' />
 </template>
 

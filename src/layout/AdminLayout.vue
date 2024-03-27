@@ -1,7 +1,7 @@
 <template>
     <div class="common-layout">
         <el-container>
-            <el-aside width="200px" style='background-color: #63B0FF; min-height: 100vh'>
+            <el-aside width="200px" class="xxc">
                 <Menu />
             </el-aside>
 
@@ -35,6 +35,13 @@ import Menu from '@/views/AdminAside.vue' /*标签页*/
 * {
     padding: 0px;
     margin: 0px;
+}
+
+.xxc {
+    background: url('@/assets/bg3.png');
+    min-height: 100vh;
+    /* background-position: 100% */
+    background-size: cover;
 }
 
 /* 标签页 */

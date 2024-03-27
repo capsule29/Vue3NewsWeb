@@ -18,7 +18,13 @@ const routes = [
                 component: () => import('@/pages/AdminMainUser.vue')
             }, {
                 path: '/admin/news',
-                component: () => import('@/pages/AdminMainNews.vue')
+                component: () => import('@/pages/AdminMainNews.vue'),
+                children:[
+                    {
+                        path:'/editor',
+                        component: () => import('@/pages/AdminMainRichEditor.vue'),
+                    }
+                ]
             },
         ]
     },

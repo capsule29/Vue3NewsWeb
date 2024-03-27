@@ -1,6 +1,13 @@
 <template>
-
-    <h3>CNRS-Admin</h3>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <br>
     <el-menu default-active="2" class="el-menu-vertical-demo">
         <router-link to="/admin/user">
