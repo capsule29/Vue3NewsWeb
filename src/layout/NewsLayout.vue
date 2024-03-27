@@ -4,6 +4,7 @@
       <Header />
     </el-header>
     <el-main class="el-main">
+      
       <Main />
     </el-main>
     <el-footer class="footer">胶囊科技有限公司新闻网 2024 Created by 092220117金豪楠</el-footer>
@@ -11,8 +12,10 @@
 </template>
 
 <script setup lang="ts">
-import Header from '@/components/News/NewsHeader.vue'
-import Main from '@/components/News/NewsMain.vue'
+
+import Header from '@/components/Header.vue'
+import Main from '@/views/NewsMain.vue'
+
 </script>
 
 <style scoped>
@@ -25,6 +28,8 @@ import Main from '@/components/News/NewsMain.vue'
   background-color: #f4f6f9;
   min-height: 100%;
 }
+
+
 
 .el-main {
   margin: 0px auto;

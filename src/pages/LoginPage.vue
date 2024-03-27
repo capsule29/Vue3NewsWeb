@@ -63,6 +63,7 @@ let input_user_name: Ref<string> = ref('')
 let input_password: Ref<string> = ref('')
 
 /*======================登录====================== */
+import CryptoJS from 'crypto-js'
 const login = async (user_name: string, password: string, is_admin: string): Promise<void> => {
   if (user_name == '') {
     startMessageAlert('error', '请输入用户名')
@@ -81,7 +82,7 @@ const login = async (user_name: string, password: string, is_admin: string): Pro
     .get('/api/login/', {
       params: {
         user_name,
-        password,
+        password: CryptoJS.MD5(CryptoJS.MD5(password)),
         is_admin
       }
     })

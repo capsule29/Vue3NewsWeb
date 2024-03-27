@@ -4,8 +4,8 @@
     <el-row :gutter="60">
       <el-col :span="16">
         <el-card style="min-width: 800px">
+          <!-- 无限滚动新闻卡片 -->
           <ul v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
-            <!-- <li :key="index" v-for="(item, index) in newsData" v-if="item < count"> -->
             <li :key="index" v-for="(item, index) in newsData">
               <NewsCard
                 v-if="index <= count"
@@ -20,11 +20,13 @@
                 @addReduce="addRudeuceFunc"
                 @openComment="openComment"
               />
-              <NewsComment v-if="item.is_open_comment_status" />
+              <!-- 小评论区 -->
+              <NewsCommentView v-if="item.is_open_comment_status" :news_id="item.news_id" />
               <!-- 分割线 -->
               <el-divider v-show="index <= count" />
             </li>
           </ul>
+          <!-- 无限滚动提示 -->
           <div style="text-align: center">
             <p v-show="loading" v-loading="true"></p>
             <p v-show="noMore">都被你看光了</p>
@@ -49,9 +51,9 @@
 <script setup lang="ts">
 /* ====================导入==================== */
 import { ref, reactive, onMounted, computed } from 'vue'
-import NewsCard from '@/components/News/NewsCard.vue'
-import NewsAside from '@/components/News/NewsAside.vue'
-import NewsComment from '@/components/News/NewsComment.vue'
+import NewsCard from '@/components/NewsCard.vue'
+import NewsAside from '@/views/NewsAside.vue'
+import NewsCommentView from '@/components/NewsComment.vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 /* ====================接口==================== */
@@ -181,7 +183,6 @@ const addRedeceSuccess = (is_add: boolean, what: string): void => {
  * @param index
  */
 const openComment = (index: number): void => {
-  console.log(newsData[index].is_open_comment_status)
   newsData[index].is_open_comment_status = !newsData[index].is_open_comment_status
 }
 
@@ -195,7 +196,7 @@ const load = () => {
   setTimeout(() => {
     count.value += 1
     loading.value = false
-  }, 2000)
+  }, 1000)
 }
 /* ====================NewsAside==================== */
 interface NewsAsideInterface {

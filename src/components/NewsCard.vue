@@ -14,12 +14,12 @@
     <el-link type="primary" :underline="false">
       <el-text type="" size="large" line-clamp="3" style="">{{ news_content }}</el-text>
     </el-link>
-
+    <br />
     <el-link type="primary" :underline="false">
       <div class="more">查看更多</div>
     </el-link>
 
-    <div>
+    <div style="margin-top: 20px">
       <!-- 记录开关状态 cookie session 服务端 -->
       <!-- 赞开关 -->
       <el-button
@@ -45,6 +45,7 @@
         <span v-if="is_star">已</span>收藏 {{ news_star_number }}
       </el-button>
 
+      <!-- 打开小评论区 -->
       <el-button
         type="pain"
         :icon="ChatLineSquare"
@@ -62,7 +63,7 @@
 import { onBeforeUpdate, ref, type Ref } from 'vue'
 import { ArrowUpBold, Star, StarFilled, ChatLineSquare } from '@element-plus/icons-vue'
 
-/* ====================父组件传参==================== */
+/* ====================NewsMain组件传参==================== */
 let props = defineProps<{
   index: number
   news_id: number
@@ -86,6 +87,9 @@ let is_open_str: Ref<string> = ref('展开评论')
 
 /* ====================函数==================== */
 
+/**
+ * 改变按钮值
+ */
 const changeCommentString = () => {
   if (props.is_open_comment_status) is_open_str.value = '折叠评论'
   else is_open_str.value = '展开评论'
@@ -95,9 +99,6 @@ const changeCommentString = () => {
 onBeforeUpdate(() => {
   changeCommentString()
 })
-// onUpdated(() => {
-//     changeCommentString()
-// })
 </script>
 
 <style scoped>
@@ -123,7 +124,7 @@ onBeforeUpdate(() => {
 
 .more {
   left: 500px;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 .radius {

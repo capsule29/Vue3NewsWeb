@@ -3,10 +3,25 @@ const routes = [
     {
         path: '/login',
         alias: '/',
-        component: () => import('@/views/LoginView.vue'),
+        component: () => import('@/pages/LoginPage.vue'),
     },
-    { path: '/news', component: () => import('@/views/NewsView.vue'), },
-    { path: '/admin', component: () => import('@/views/AdminView.vue'), },
+    {
+        path: '/news',
+        component: () => import('@/layout/NewsLayout.vue'),
+    },
+    {
+        path: '/admin',
+        component: () => import('@/layout/AdminLayout.vue'),
+        // children: [
+        //     {
+        //         path: '/user',
+        //         component: () => import('@/')
+        //     }, {
+        //         path: '/news',
+        //         component: () => import('@/')
+        //     },
+        // ]
+    },
     /**
      * 或者
      * import RegView from '@/views/costumers/RegView.vue';
