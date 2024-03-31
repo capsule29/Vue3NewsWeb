@@ -12,20 +12,18 @@ const routes = [
     {
         path: '/admin',
         component: () => import('@/layout/AdminLayout.vue'),
+        redirect: '/admin/user',
         children: [
             {
                 path: '/admin/user',
-                component: () => import('@/pages/AdminMainUser.vue')
+                component: () => import('@/pages/AdminMainUser.vue'),
             }, {
                 path: '/admin/news',
                 component: () => import('@/pages/AdminMainNews.vue'),
-                children:[
-                    {
-                        path:'/editor',
-                        component: () => import('@/pages/AdminMainRichEditor.vue'),
-                    }
-                ]
-            },
+            },{
+                path:'/admin/editor/:news_id',
+                component: () => import('@/pages/AdminMainRichEditor.vue'),
+            }
         ]
     },
 

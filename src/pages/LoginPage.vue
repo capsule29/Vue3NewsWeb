@@ -1,141 +1,208 @@
 <template>
-    <div class="big-background">
-        <!-- <span style="top: 100px; font-size: 24px">胶囊科技有限公司新闻网</span> -->
-
-        <el-card class="center">
-            <template #header>
-                <div class="card-header">
-                    <span>LOGIN</span>
-                </div>
-            </template>
-            <!-- 用户名 -->
-            <div class="mt-4">
-                <el-input v-model="input_user_name" style="max-width: 600px" placeholder="账户名" class="input-with-select"
-                    :prefix-icon="User">
-                    <template #append>
-                        <el-select v-model="select_is_admin" placeholder="请选择" style="width: 115px">
-                            <el-option label="用户" value="false" />
-                            <el-option label="管理员" value="true" />
-                        </el-select>
-                    </template>
-                </el-input>
-            </div>
-            <br />
-            <!-- 密码 -->
-            <el-input v-model="input_password" style="min-width: 240px" type="password" placeholder="密码" show-password
-                :prefix-icon="Lock" />
-
-            <template #footer>
-                <el-button type="success" style="min-width: 80px"
-                    @click="login(input_user_name, input_password, select_is_admin)">
-                    登录
-                </el-button>
-            </template>
-        </el-card>
-    </div>
+  <div class="big-background">
+    <el-card class="center">
+      <template #header>
+        <div class="card-header">
+          <span><!-- 胶囊科技有限公司新闻网  -->LOGIN</span>
+        </div>
+      </template>
+      <el-form
+        ref="ruleFormRef"
+        :rules="rules"
+        label-position="left"
+        label-width="auto"
+        :model="ruleForm"
+        style="max-width: 600px"
+      >
+        <!--账户名  -->
+        <el-form-item label="账户名" prop="user_name">
+          <el-input
+            v-model="ruleForm.user_name"
+            style="max-width: 600px"
+            placeholder="请输入账户名"
+            class="input-with-select"
+            :prefix-icon="User"
+          >
+          </el-input>
+        </el-form-item>
+        <br />
+        <!-- 密码 -->
+        <el-form-item label="密码" prop="password">
+          <el-input
+            v-model="ruleForm.password"
+            style="min-width: 240px"
+            type="password"
+            placeholder="请输入密码"
+            show-password
+            :prefix-icon="Lock"
+          />
+        </el-form-item>
+        <br />
+        <!-- 登录方式 -->
+        <el-form-item label="管理员登录" prop="is_admin">
+          <!-- <el-form-item label="登录方式"> -->
+          <el-switch
+            style="--el-switch-off-color: #13ce66"
+            v-model="ruleForm.is_admin"
+            inline-prompt
+            active-text="管理"
+            active-value="true"
+            inactive-text="用户"
+            inactive-value="false"
+          />
+        </el-form-item>
+        <br />
+        <el-form-item>
+          <el-button type="success" style="min-width: 80px" @click="submitForm(ruleFormRef)">
+            登录
+          </el-button>
+          <el-button type="success" style="min-width: 80px" @click="resetForm(ruleFormRef)">
+            重置
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
 </template>
 
 <script setup lang="ts">
 /*======================导入====================== */
 import axios from 'axios'
-import { ref, type Ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
-/*======================常变量====================== */
-const router = useRouter()
-let select_is_admin: Ref<string> = ref('')
-let input_user_name: Ref<string> = ref('')
-let input_password: Ref<string> = ref('')
+import type { FormInstance, FormRules } from 'element-plus'
 
-/*======================登录====================== */
-import CryptoJS from 'crypto-js'
-const login = async (user_name: string, password: string, is_admin: string): Promise<void> => {
-    if (user_name == '') {
-        startMessageAlert('error', '请输入用户名')
-        return
-    }
-    if (password == '') {
-        startMessageAlert('error', '请输入密码')
-        return
-    }
-    if (is_admin == '') {
-        startMessageAlert('error', '请选择登录模式')
-        return
-    }
+/*======================表单验证====================== */
+interface RuleForm {
+  user_name: string
+  is_admin: string
+  password: string
+}
+const ruleFormRef = ref<FormInstance>()
+const ruleForm = reactive<RuleForm>({
+  user_name: '',
+  is_admin: '',
+  password: ''
+})
 
-    await axios
-        .get('/api/login/', {
-            params: {
-                user_name,
-                password: CryptoJS.MD5(CryptoJS.MD5(password)),
-                is_admin
-            }
-        })
-        .then((solution) => {
-            if (typeof solution === 'object') {
-                // 添加cookie
-                const data = solution.data
-                document.cookie = `user_id=${data.user_id};`
-                document.cookie = `user_name = ${data.user_name};`
-                document.cookie = `is_admin = ${data.is_admin}`
-                startMessageAlert('success', '登陆成功')
-                // vue router 跳转
-                if (data.is_admin == 'true') {
-                    router.push('/admin')
-                } else {
-                    router.push('/news')
-                }
-            }
-            //   else {
-            //     // 不唯一，数据库里应该不会有重复（
-            //     startMessageAlert('error', '账户非法')
-            //   }
-        })
-        .catch((err) => {
-            startMessageAlert('error', '登录失败，请重新验证账号密码或权限')
-            throw err
-        })
-        .finally(function () { })
+// 表单验证规则
+const rules = reactive<FormRules<RuleForm>>({
+  user_name: [
+    {
+      required: true,
+      message: '请输入用户名',
+      trigger: 'blur'
+    },
+    { min: 3, max: 5, message: '长度3-5', trigger: 'blur' }
+  ],
+  is_admin: [
+    {
+      required: false,
+      message: '请选择登录方式',
+      trigger: 'blur'
+    }
+  ],
+  password: [
+    {
+      required: true,
+      message: '请输入密码',
+      trigger: 'blur'
+    }
+  ]
+})
+
+/**
+ * 验证表单并登录
+ * @param formEl
+ */
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      // 验证成功登录
+      login(ruleForm.user_name, ruleForm.password, ruleForm.is_admin)
+    } else {
+      ElMessage.error('请检查用户名和密码')
+    }
+  })
 }
 
 /**
- * 登录成功失败弹窗
- * @param type
- * @param str
+ * 重置表单
+ * @param formEl
  */
-const startMessageAlert = (type: string, str: string): void => {
-    // 调用弹窗
-    ElMessage({ message: str, type: type, grouping: true, showClose: true })
+const resetForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
+}
+/*======================登录====================== */
+// MD5加密库
+import CryptoJS from 'crypto-js'
+const router = useRouter()
+const login = async (user_name: string, password: string, is_admin: string): Promise<void> => {
+  await axios
+    .get('/api/login/', {
+      params: {
+        user_name,
+        password: CryptoJS.MD5(CryptoJS.MD5(password)).toString(),
+        is_admin
+      }
+    })
+    .then((solution) => {
+      if (typeof solution === 'object') {
+        ElMessage.success('登陆成功')
+        // 添加cookie
+        const data = solution.data
+        document.cookie = `user_id=${data.user_id};`
+        document.cookie = `user_name = ${data.user_name};`
+        document.cookie = `is_admin = ${data.is_admin}`
+
+        // vue router 跳转，replace不留历史记录
+        if (data.is_admin == 'true') {
+          router.push({ path: '/admin', replace: true })
+        } else if (data.is_admin == 'false') {
+          router.push({ path: '/news', replace: true })
+        }
+      } else {
+        // 用户不唯一，数据库里应该不会有重复（
+        ElMessage.error('账户非法')
+      }
+    })
+    .catch((err) => {
+      ElMessage.error('访问后台数据失败，请重新验证账号密码或权限')
+      throw err
+    })
 }
 </script>
 
 <style scoped>
 * {
-    padding: 0px;
-    margin: 0px;
-    box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
 }
 
 .center {
-    min-height: 200px;
-    max-width: 480px;
-    position: relative;
-    left: 65%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+  min-height: 200px;
+  max-width: 480px;
+  position: relative;
+  left: 65%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .big-background {
-    width: 100%;
-    height: 100vh;
-    /* background: linear-gradient(to bottom, #B5E5D9, #ADDDD1); */
-    background: url('@/assets/bg2.png') no-repeat;
-    background-size: contain;
+  width: 100%;
+  height: 100vh;
+  /* background: linear-gradient(to bottom, #B5E5D9, #ADDDD1); */
+  background: url('@/assets/bg2.png') no-repeat;
+  background-size: contain;
 }
 
 .inputClass {
-    position: relative;
-    top: 100px;
+  position: relative;
+  top: 100px;
 }
 </style>

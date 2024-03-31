@@ -7,17 +7,16 @@
         <el-tab-pane label="Role" name="third">Role</el-tab-pane>
         <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
     </el-tabs> -->
-    <router-view />
+    <el-row>
+        <el-col :span='23' >
+            <router-view />
+        </el-col>
+    </el-row>
 
 </template>
 
 <script setup lang='ts'>
-import {ref} from 'vue'
-import type { TabsPaneContext } from 'element-plus'
-const activeName = ref('first')
-const handleClick = (tab: TabsPaneContext, event: Event) => {
-    console.log(tab, event)
-}
+
 </script>
 
 <style scoped></style>

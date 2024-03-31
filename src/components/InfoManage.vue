@@ -3,7 +3,7 @@
         <el-card>
             <!-- 卡片头部 -->
             <template #header>
-                <div class="card-header">
+                <div class="card-header" style="text-align: center;">
                     <span v-if="type == 'news'">
                         新闻列表
                     </span>
@@ -49,28 +49,18 @@
 
                 <el-table-column label='操作' width="220" align="center" header-align="center">
                     <template #default="scope">
-                        <!-- 保存 -->
-                        <!-- <el-button v-if="scope.row.edit" size="mini" type="success"
-                            @click="handleSave(scope.$index, scope.row)"><el-icon>
-                                <check />
-                            </el-icon>保存</el-button> -->
                         <!-- 编辑 -->
-                        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">
+                        <el-button size="mini" @click="() => { router.push(`/admin/editor/${scope.row.news_id}`) }">
                             <el-icon>
                                 <edit />
                             </el-icon>内容编辑
                         </el-button>
-                        <!-- <el-button v-else size="mini" @click="handleEdit(scope.$index, scope.row)">
-                            <el-icon>
-                                <edit />
-                            </el-icon>编辑
-                        </el-button> -->
                         <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" :icon="InfoFilled"
                             icon-color="red" title="确定删除该条记录吗？" @confirm="handleDelete(scope.$index, scope.row)">
                             <!--删除  -->
                             <template #reference>
                                 <el-button size="mini" type="danger">
-                                    <el-icon><delete-filled /></el-icon> 删除</el-button>
+                                    <el-icon><delete-filled /></el-icon>删除</el-button>
                             </template>
                         </el-popconfirm>
                     </template>
@@ -157,7 +147,7 @@
             </el-button>
             <!-- </template> -->
         </el-card>
-
+        <router-view></router-view>
     </div>
 </template>
 
@@ -167,6 +157,8 @@ import { reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Edit, DeleteFilled, Check, InfoFilled } from '@element-plus/icons-vue'
 import CryptoJS from 'crypto-js'
+import { useRouter } from 'vue-router';
+const router = useRouter()
 
 type News = {
     news_id?: number
@@ -223,7 +215,6 @@ const handleSave = (index: any, row: any): Boolean => {
     }
     tableData[index].edit = false
     tableData[index] = row
-
 
     let api = ''
     if (row.flag) { // 添加
@@ -333,7 +324,8 @@ const getData = () => {
         }).finally(() => {
             for (let item in tableData) {
                 tableData[item].edit = false
-                tableData[item].flag = false
+                if (props.type == 'user')
+                    (tableData[item] as User).flag = false
             }
         })
 }
