@@ -14,11 +14,9 @@
 </template>
 
 <script setup lang="ts">
-
 import Header from '@/components/HeaderBar.vue'
 import FooterWord from '@/components/FooterWord.vue'
 import Main from '@/views/NewsMain.vue'
-
 </script>
 
 <style scoped>

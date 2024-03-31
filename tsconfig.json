@@ -1,12 +1,12 @@
 {
-//   "include": ["src/**/*"],
-//   "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
-    }
-  ]
+    //   "include": ["src/**/*"],
+    //   "files": [],
+    "references": [
+        {
+            "path": "./tsconfig.node.json"
+        },
+        {
+            "path": "./tsconfig.app.json"
+        }
+    ]
 }

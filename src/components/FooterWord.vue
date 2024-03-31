@@ -1,9 +1,8 @@
 <template>
-    <div class="footer"> 胶囊科技有限公司新闻网 2024 Created by 092220117金豪楠 </div>
+    <div class="footer">胶囊科技有限公司新闻网 2024 Created by 092220117金豪楠</div>
 </template>
 
-<script setup lang='ts'>
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
 * {

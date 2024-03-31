@@ -7,14 +7,24 @@
                     <!-- 无限滚动新闻卡片 -->
                     <ul v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
                         <li :key="index" v-for="(item, index) in newsData">
-                            <NewsCard v-if="index <= count" :index="index" :news_id="item.news_id"
-                                :news_title="item.news_title" :news_content="item.news_content"
-                                :news_praise_number="item.news_praise_number" :news_star_number="item.news_star_number"
+                            <NewsCard
+                                v-if="index <= count"
+                                :index="index"
+                                :news_id="item.news_id"
+                                :news_title="item.news_title"
+                                :news_content="item.news_content"
+                                :news_praise_number="item.news_praise_number"
+                                :news_star_number="item.news_star_number"
                                 :news_created_at="item.news_created_at"
-                                :is_open_comment_status="item.is_open_comment_status" @addReduce="addRudeuceFunc"
-                                @openComment="openComment" />
+                                :is_open_comment_status="item.is_open_comment_status"
+                                @addReduce="addRudeuceFunc"
+                                @openComment="openComment"
+                            />
                             <!-- 小评论区 -->
-                            <NewsCommentView v-if="item.is_open_comment_status" :news_id="item.news_id" />
+                            <NewsCommentView
+                                v-if="item.is_open_comment_status"
+                                :news_id="item.news_id"
+                            />
                             <!-- 分割线 -->
                             <el-divider v-show="index <= count" />
                         </li>
@@ -29,7 +39,11 @@
 
             <!-- 右侧边栏 -->
             <el-col :span="8">
-                <el-card :key="index" v-for="(item, index) in NewsAsides" style="min-width: 300px; margin-bottom: 20px">
+                <el-card
+                    :key="index"
+                    v-for="(item, index) in NewsAsides"
+                    style="min-width: 300px; margin-bottom: 20px"
+                >
                     <NewsAside :title="item.title" :content="item.content" />
                 </el-card>
             </el-col>
@@ -76,7 +90,7 @@ const getData = async (): Promise<void> => {
         .catch((error) => {
             throw error
         })
-        .finally(function () { })
+        .finally(function () {})
     for (let i = 0; i < newsData.length && i < 100; i++) {
         newsData[i].is_open_comment_status = false
     }
@@ -140,11 +154,11 @@ const addReduceSql = async (is_add: boolean, what: string, news_id: number): Pro
                 is_add
             }
         })
-        .then(() => { })
+        .then(() => {})
         .catch((err) => {
             throw err
         })
-        .finally(() => { })
+        .finally(() => {})
 }
 
 /**

@@ -1,5 +1,4 @@
 <template>
-
     <!-- 标签页 -->
     <!-- <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane label="User" name="first">User</el-tab-pane>
@@ -8,15 +7,12 @@
         <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
     </el-tabs> -->
     <el-row>
-        <el-col :span='23' >
+        <el-col :span="23">
             <router-view />
         </el-col>
     </el-row>
-
 </template>
 
-<script setup lang='ts'>
-
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

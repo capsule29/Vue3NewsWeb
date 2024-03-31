@@ -5,12 +5,15 @@
                 <div class="grid-content bg-purple-dark">
                     <el-card class="box-card">
                         <div style="text-align: left">
-                            <span> 新闻ID: {{ $route.params.news_id }}</span>
-                            <br>
+                            <span>新闻ID: {{ $route.params.news_id }}</span>
+                            <br />
                             <span>新闻内容: </span>
                             <el-divider></el-divider>
                         </div>
-                        <RichEditor :model-value="editorValue" @update:modelValue="handleUpdateValue"></RichEditor>
+                        <RichEditor
+                            :model-value="editorValue"
+                            @update:modelValue="handleUpdateValue"
+                        ></RichEditor>
                     </el-card>
                 </div>
             </el-col>

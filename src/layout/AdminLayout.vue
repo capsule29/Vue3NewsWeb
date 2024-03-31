@@ -28,7 +28,6 @@ import Header from '@/components/HeaderBar.vue'
 import FooterWord from '@/components/FooterWord.vue'
 import AdminMain from '@/views/AdminMain.vue'
 import Menu from '@/views/AdminAside.vue' /*标签页*/
-
 </script>
 
 <style scoped>
@@ -45,7 +44,7 @@ import Menu from '@/views/AdminAside.vue' /*标签页*/
 }
 
 /* 标签页 */
-.demo-tabs>.el-tabs__content {
+.demo-tabs > .el-tabs__content {
     padding: 32px;
     color: #6b778c;
     font-size: 32px;

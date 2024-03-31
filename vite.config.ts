@@ -10,7 +10,6 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
-
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
@@ -20,18 +19,18 @@ export default defineConfig({
 
         // element-plus
         AutoImport({
-            resolvers: [ElementPlusResolver()],
+            resolvers: [ElementPlusResolver()]
         }),
         Components({
-            resolvers: [ElementPlusResolver()],
-        }),
+            resolvers: [ElementPlusResolver()]
+        })
     ],
     // 开发环境有效
     server: {
         proxy: {
             // http://localhost:5173/api ===> http://124.223.43.79:233
             '/api': {
-                target: "http://124.223.43.79:233",
+                target: 'http://124.223.43.79:233',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, '')
             }

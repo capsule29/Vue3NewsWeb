@@ -1,5 +1,5 @@
 <template>
-    <InfoManage type='user' />
+    <InfoManage type="user" />
 </template>
 
 <script setup lang="ts">

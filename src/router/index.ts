@@ -3,11 +3,11 @@ const routes = [
     {
         path: '/login',
         alias: '/',
-        component: () => import('@/pages/LoginPage.vue'),
+        component: () => import('@/pages/LoginPage.vue')
     },
     {
         path: '/news',
-        component: () => import('@/layout/NewsLayout.vue'),
+        component: () => import('@/layout/NewsLayout.vue')
     },
     {
         path: '/admin',
@@ -16,20 +16,20 @@ const routes = [
         children: [
             {
                 path: '/admin/user',
-                component: () => import('@/pages/AdminMainUser.vue'),
-            }, {
+                component: () => import('@/pages/AdminMainUser.vue')
+            },
+            {
                 path: '/admin/news',
-                component: () => import('@/pages/AdminMainNews.vue'),
-            },{
-                path:'/admin/editor/:news_id',
-                component: () => import('@/pages/AdminMainRichEditor.vue'),
+                component: () => import('@/pages/AdminMainNews.vue')
+            },
+            {
+                path: '/admin/editor/:news_id',
+                component: () => import('@/pages/AdminMainRichEditor.vue')
             }
         ]
-    },
-
+    }
 ]
 export default createRouter({
     history: createWebHashHistory(),
     routes
 })
-
