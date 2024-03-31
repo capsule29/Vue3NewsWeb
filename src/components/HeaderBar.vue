@@ -5,8 +5,8 @@
             <img src="/src/assets/capsule.ico" alt="" />
             <span>胶囊科技有限公司新闻网</span>
         </div>
+        <el-button style="margin-right: 50px" @click="exitLogin"> 退出登录 </el-button>
     </header>
-    <el-button style="display: flex" @click="exitLogin"> 退出登录 </el-button>
 </template>
 
 <script setup lang="ts">
@@ -28,16 +28,21 @@ const exitLogin = () => {
 
 <style scoped>
 header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+
     background-color: white;
     height: 52px;
     box-shadow: rgba(18, 18, 18, 0.1) 0px 1px 3px 0px;
-    text-align: right;
 }
 
 .logoBar {
+    margin-left: 30px;
     width: 25%;
     height: 52px;
-    line-height: 52px;
 }
 
 .logoBar > img {
@@ -51,7 +56,7 @@ header {
 .logoBar > span {
     position: relative;
     left: 24px;
-    line-height: 52px;
     font-size: 24px;
+    line-height: 52px;
 }
 </style>
