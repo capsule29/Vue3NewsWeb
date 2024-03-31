@@ -18,7 +18,7 @@ declare module 'vue' {
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElContainer: typeof import('element-plus/es')['ElContainer']
-    ElDivider: (typeof import('element-plus/es'))['ElDivider']
+    ElDivider: typeof import('element-plus/es')['ElDivider']
     ElDropdown: (typeof import('element-plus/es'))['ElDropdown']
     ElDropdownItem: (typeof import('element-plus/es'))['ElDropdownItem']
     ElDropdownMenu: (typeof import('element-plus/es'))['ElDropdownMenu']
@@ -29,7 +29,7 @@ declare module 'vue' {
     ElHeader: typeof import('element-plus/es')['ElHeader']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
-    ElLink: (typeof import('element-plus/es'))['ElLink']
+    ElLink: typeof import('element-plus/es')['ElLink']
     ElMain: typeof import('element-plus/es')['ElMain']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
@@ -76,7 +76,7 @@ declare module 'vue' {
     UsernameInput: (typeof import('./src/components/Login/UsernameInput.vue'))['default']
   }
   export interface ComponentCustomProperties {
-    vInfiniteScroll: (typeof import('element-plus/es'))['ElInfiniteScroll']
-    vLoading: (typeof import('element-plus/es'))['ElLoadingDirective']
+    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

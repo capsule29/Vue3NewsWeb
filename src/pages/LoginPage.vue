@@ -214,8 +214,7 @@ const login = async (user_name: string, password: string, is_admin: string): Pro
 .big-background {
     width: 100%;
     height: 100vh;
-    /* background: linear-gradient(to bottom, #B5E5D9, #ADDDD1); */
-    background: url('@/assets/bg2.png') no-repeat;
+    background: url('@/assets/bg4.png') no-repeat;
     background-size: contain;
 }
 

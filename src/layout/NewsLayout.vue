@@ -1,4 +1,5 @@
 <template>
+    <div class="bg"></div>
     <el-container class="container">
         <el-header>
             <Header />
@@ -23,10 +24,21 @@ import Main from '@/views/NewsMain.vue'
 * {
     padding: 0px;
     margin: 0px;
+    z-index: 2;
 }
 
+.bg {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    background-image: url('@/assets/bg4.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
 .container {
     background-color: #f4f6f9;
+
     min-height: 100%;
 }
 
