@@ -6,6 +6,7 @@
           <span><!-- 胶囊科技有限公司新闻网  -->LOGIN</span>
         </div>
       </template>
+      <!-- 表单 -->
       <el-form
         ref="ruleFormRef"
         :rules="rules"
@@ -39,8 +40,7 @@
         </el-form-item>
         <br />
         <!-- 登录方式 -->
-        <el-form-item label="管理员登录" prop="is_admin">
-          <!-- <el-form-item label="登录方式"> -->
+        <el-form-item label="登录方式" prop="is_admin">
           <el-switch
             style="--el-switch-off-color: #13ce66"
             v-model="ruleForm.is_admin"
@@ -52,6 +52,7 @@
           />
         </el-form-item>
         <br />
+        <!-- 操作按钮 -->
         <el-form-item>
           <el-button type="success" style="min-width: 80px" @click="submitForm(ruleFormRef)">
             登录
@@ -66,21 +67,24 @@
 </template>
 
 <script setup lang="ts">
-/*======================导入====================== */
+//#region 导入
 import axios from 'axios'
 import { ref, reactive } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
+//#endregion
 
-/*======================表单验证====================== */
+//#region 表单验证
+// 表单数据类型
 interface RuleForm {
   user_name: string
   is_admin: string
   password: string
 }
 const ruleFormRef = ref<FormInstance>()
+// 表单数据
 const ruleForm = reactive<RuleForm>({
   user_name: '',
   is_admin: '',
@@ -112,7 +116,6 @@ const rules = reactive<FormRules<RuleForm>>({
     }
   ]
 })
-
 /**
  * 验证表单并登录
  * @param formEl
@@ -128,7 +131,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     }
   })
 }
-
 /**
  * 重置表单
  * @param formEl
@@ -137,10 +139,17 @@ const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
 }
-/*======================登录====================== */
+//#endregion
+
+//#region 登录
 // MD5加密库
 import CryptoJS from 'crypto-js'
-const router = useRouter()
+/**
+ * 登录
+ * @param user_name
+ * @param password
+ * @param is_admin
+ */
 const login = async (user_name: string, password: string, is_admin: string): Promise<void> => {
   await axios
     .get('/api/login/', {
@@ -159,6 +168,7 @@ const login = async (user_name: string, password: string, is_admin: string): Pro
         document.cookie = `user_name = ${data.user_name};`
         document.cookie = `is_admin = ${data.is_admin}`
 
+        const router = useRouter()
         // vue router 跳转，replace不留历史记录
         if (data.is_admin == 'true') {
           router.push({ path: '/admin', replace: true })
@@ -175,6 +185,7 @@ const login = async (user_name: string, password: string, is_admin: string): Pro
       throw err
     })
 }
+//#endregion
 </script>
 
 <style scoped>
