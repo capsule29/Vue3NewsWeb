@@ -190,7 +190,7 @@
                             ><el-icon> <check /> </el-icon>保存</el-button
                         >
                         <!-- 编辑 -->
-                        <el-button v-else size="mini" @click="handleEdit(scope.$index, scope.row)">
+                        <el-button v-else size="mini" @click="handleEdit(scope.$index)">
                             <el-icon> <edit /> </el-icon>编辑</el-button
                         >
                         <el-popconfirm
@@ -262,7 +262,7 @@ const props = defineProps<{
 /**
  * 使tableData[index]变为可修改状态
  */
-const handleEdit = (index: any, row: any) => {
+const handleEdit = (index: any) => {
     tableData[index].edit = true
 }
 
