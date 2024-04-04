@@ -15,4 +15,8 @@
 
 <script setup lang="ts"></script>
 
-<style scoped></style>
+<style scoped>
+* {
+    /* overflow-y: scroll; */
+}
+</style>

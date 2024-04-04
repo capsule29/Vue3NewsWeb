@@ -1,5 +1,5 @@
 <template>
-    <el-card>
+    <el-card style="margin-top: 20px">
         <el-table :data="tableData" style="width: 100%" border stripe height="500">
             <template #header>
                 <div class="card-header" style="text-align: center">用户列表</div>

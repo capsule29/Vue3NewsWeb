@@ -23,7 +23,7 @@ const routes = [
                 component: () => import('@/pages/AdminMainNews.vue')
             },
             {
-                path: '/admin/editor/:news_id',
+                path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_content',
                 component: () => import('@/pages/AdminMainRichEditor.vue')
             }
         ]

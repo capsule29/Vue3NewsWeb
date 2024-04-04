@@ -1,5 +1,5 @@
 <template>
-    <el-card>
+    <el-card style="margin-top: 20px">
         <el-table :data="tableData" style="width: 100%" border stripe height="500" size="default">
             <!-- 卡片头部 -->
             <template #header>
@@ -16,7 +16,7 @@
                         {{ scope.row.news_id }}
                     </el-text>
                 </template>
-                <template v-if="item.idx == 2" #default="scope">
+                <template v-else-if="item.idx == 2" #default="scope">
                     <el-input v-if="scope.row.edit" v-model="scope.row.news_title"></el-input>
                     <div v-else>
                         {{ scope.row.news_title }}
@@ -108,7 +108,18 @@
                     <el-button
                         @click="
                             () => {
-                                router.push(`/admin/editor/${scope.row.news_id}`)
+                                // path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_content',
+                                let news_writer_name = ''
+                                getUserNameById(scope.row.news_writer_id)
+                                    .then((result) => {
+                                        news_writer_name = result
+                                        router.push(
+                                            `/admin/editor/${scope.row.news_id}/${scope.row.news_title}/${news_writer_name}/${scope.row.news_content}`
+                                        )
+                                    })
+                                    .catch((err) => {
+                                        throw err
+                                    })
                             }
                         "
                     >
@@ -144,6 +155,7 @@ import { Edit, DeleteFilled, InfoFilled } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import type { NewsWithDate } from '@/api/news/NewsModel'
 import { deleteNews } from '@/api/news/index'
+import { getUserNameById } from '@/api/user/index'
 const router = useRouter()
 // 新闻表头
 const news_col = [

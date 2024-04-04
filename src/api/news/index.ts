@@ -18,23 +18,23 @@ const deleteNews = (news: News) => {
         })
 }
 
-const getNewById = async (news_id: number): Promise<{}> => {
-    let data = {}
-    const api = '/api/news/select'
-    await axios
-        .get(api, {
-            params: {
-                news_id: news_id
-            }
-        })
-        .then((solution) => {
-            data = solution.data
-            // ElMessage.success('删除成功')
-        })
-        .catch(() => {
-            // ElMessage.error('删除失败')
-        })
-    return data
-}
+// const getNewById = async (news_id: number): Promise<{}> => {
+//     let data = {}
+//     const api = '/api/news/select'
+//     await axios
+//         .get(api, {
+//             params: {
+//                 news_id: news_id
+//             }
+//         })
+//         .then((solution) => {
+//             data = solution.data
+//             // ElMessage.success('删除成功')
+//         })
+//         .catch(() => {
+//             // ElMessage.error('删除失败')
+//         })
+//     return data
+// }
 
-export { deleteNews, getNewById }
+export { deleteNews /*, getNewById */ }

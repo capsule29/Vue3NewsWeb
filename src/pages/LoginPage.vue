@@ -99,8 +99,8 @@ const rules = reactive<FormRules<RuleForm>>({
             required: true,
             message: '请输入用户名',
             trigger: 'blur'
-        },
-        { min: 3, max: 5, message: '长度3-5', trigger: 'blur' }
+        }
+        // { min: 3, max: 5, message: '长度3-5', trigger: 'blur' }
     ],
     authority_id: [
         {
