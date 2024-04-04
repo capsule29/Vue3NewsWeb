@@ -11,9 +11,10 @@ app.use(createPinia())
 import { getCookie /* , setCookie */ } from 'typescript-cookie'
 /**vue-rourer */
 import router from './router'
+app.use(router)
+
 // 路由守卫
 const routerWhiteList = ['/', '/login']
-app.use(router)
 import { ElMessage } from 'element-plus'
 router.beforeEach((to, from, next) => {
     if (routerWhiteList.includes(to.path)) {

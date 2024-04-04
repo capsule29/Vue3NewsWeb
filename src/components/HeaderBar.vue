@@ -22,7 +22,7 @@ const exitLogin = () => {
     removeCookie('user_id')
     removeCookie('user_name')
     removeCookie('is_admin')
-    router.push('/login')
+    router.push({ path: '/login', replace: true })
 }
 </script>
 

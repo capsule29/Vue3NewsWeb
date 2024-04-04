@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AsideMenu: (typeof import('./src/components/Admin/AsideMenu.vue'))['default']
+    AuthorityTag: typeof import('./src/components/AuthorityTag.vue')['default']
     Comment: (typeof import('./src/components/Comment.vue'))['default']
     CommentCard: (typeof import('./src/components/CommentCard.vue'))['default']
     CommentSmall: (typeof import('./src/components/News/CommentSmall.vue'))['default']
@@ -69,10 +70,14 @@ declare module 'vue' {
     'NewsDetail废弃': typeof import('./src/components/NewsDetail废弃.vue')['default']
     NewsHeader: (typeof import('./src/components/News/NewsHeader.vue'))['default']
     NewsMain: (typeof import('./src/components/News/NewsMain.vue'))['default']
+    OptionBtn: typeof import('./src/components/OptionBtn.vue')['default']
+    'OptionBtn废弃': typeof import('./src/components/OptionBtn废弃.vue')['default']
     PasswordInput: (typeof import('./src/components/Login/PasswordInput.vue'))['default']
     RichEditor: typeof import('./src/components/RichEditor.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SelectAuthority: typeof import('./src/components/SelectAuthority.vue')['default']
+    UserInfo: typeof import('./src/components/UserInfo.vue')['default']
     UsernameInput: (typeof import('./src/components/Login/UsernameInput.vue'))['default']
   }
   export interface ComponentCustomProperties {

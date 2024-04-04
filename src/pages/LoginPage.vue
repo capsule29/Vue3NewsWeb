@@ -40,16 +40,8 @@
                 </el-form-item>
                 <br />
                 <!-- 登录方式 -->
-                <el-form-item label="登录方式" prop="is_admin">
-                    <el-switch
-                        style="--el-switch-off-color: #13ce66"
-                        v-model="ruleForm.is_admin"
-                        inline-prompt
-                        active-text="管理"
-                        active-value="true"
-                        inactive-text="用户"
-                        inactive-value="false"
-                    />
+                <el-form-item label="登录方式" prop="authority_id">
+                    <SelectAuthority :ruleForm="ruleForm" />
                 </el-form-item>
                 <br />
                 <!-- 操作按钮 -->
@@ -76,26 +68,27 @@
 
 <script setup lang="ts">
 //#region 导入
-import axios from 'axios'
 import { ref, reactive } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
+import { login } from '@/api/login/index'
+import { getCookie } from 'typescript-cookie'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 //#endregion
 
 //#region 表单验证
 // 表单数据类型
 interface RuleForm {
     user_name: string
-    is_admin: string
+    authority_id?: number
     password: string
 }
 const ruleFormRef = ref<FormInstance>()
 // 表单数据
 const ruleForm = reactive<RuleForm>({
     user_name: '',
-    is_admin: '',
     password: ''
 })
 
@@ -109,7 +102,7 @@ const rules = reactive<FormRules<RuleForm>>({
         },
         { min: 3, max: 5, message: '长度3-5', trigger: 'blur' }
     ],
-    is_admin: [
+    authority_id: [
         {
             required: false,
             message: '请选择登录方式',
@@ -124,73 +117,38 @@ const rules = reactive<FormRules<RuleForm>>({
         }
     ]
 })
-/**
- * 验证表单并登录
- * @param formEl
- */
+
+// 验证表单并登录
 const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
-    await formEl.validate((valid, fields) => {
+    await formEl.validate((valid /* , fields */) => {
         if (valid) {
             // 验证成功登录
-            login(ruleForm.user_name, ruleForm.password, ruleForm.is_admin)
+            login(ruleForm.user_name, ruleForm.password, ruleForm.authority_id as number).then(
+                () => {
+                    // vue router 跳转，replace不留历史记录
+                    if (getCookie('authority_id') == '1') {
+                        // 管理员
+                        router.push({ path: '/admin', replace: true })
+                    } else if (getCookie('authority_id') == '2') {
+                        // 编辑
+                        router.push({ path: '', replace: true })
+                    } else if (getCookie('authority_id') == '3') {
+                        // 用户
+                        router.push({ path: '/news', replace: true })
+                    }
+                    ElMessage.success('登陆成功')
+                }
+            )
         } else {
             ElMessage.error('请检查用户名和密码')
         }
     })
 }
-/**
- * 重置表单
- * @param formEl
- */
+// 重置表单
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()
-}
-//#endregion
-
-//#region 登录
-// MD5加密库
-import CryptoJS from 'crypto-js'
-const router = useRouter()
-/**
- * 登录
- * @param user_name
- * @param password
- * @param is_admin
- */
-const login = async (user_name: string, password: string, is_admin: string): Promise<void> => {
-    //   console.log(user_name)
-    //   console.log(password)
-    //   console.log(is_admin)
-    await axios
-        .get('/api/login', {
-            params: {
-                user_name,
-                password: CryptoJS.MD5(CryptoJS.MD5(password)).toString(),
-                is_admin
-            }
-        })
-        .then((solution) => {
-            if (typeof solution === 'object') {
-                const data = solution.data
-                // vue router 跳转，replace不留历史记录
-                if (data.is_admin == 'true') {
-                    router.push({ path: '/admin', replace: true })
-                } else if (data.is_admin == 'false') {
-                    router.push({ path: '/news', replace: true })
-                }
-                ElMessage.success('登陆成功')
-            } else {
-                // 用户不唯一，数据库里应该不会有重复（
-                ElMessage.error('账户非法')
-            }
-        })
-        .catch((err) => {
-            ElMessage.error('请检查用户名密码以及登录权限是否正确')
-            console.log('以下是错误报告')
-            throw err
-        })
 }
 //#endregion
 </script>

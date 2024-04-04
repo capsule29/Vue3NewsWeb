@@ -30,7 +30,8 @@ export default defineConfig({
         proxy: {
             // http://localhost:5173/api ===> http://124.223.43.79:233
             '/api': {
-                target: 'http://124.223.43.79:233',
+                target: 'http://124.223.43.79:233', // 服务器
+                // target: '127.0.0.1:233', // 本地服务器
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, '')
             }
