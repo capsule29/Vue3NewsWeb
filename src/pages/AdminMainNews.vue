@@ -1,6 +1,6 @@
 <template>
     <el-card style="margin-top: 20px">
-        <el-table :data="tableData" style="width: 100%" border stripe height="500" size="default">
+        <el-table :data="tableData" style="width: 100%" border stripe height="481" size="default">
             <!-- 卡片头部 -->
             <template #header>
                 <div class="card-header" style="text-align: center">新闻列表</div>
