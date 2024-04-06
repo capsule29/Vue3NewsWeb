@@ -108,13 +108,14 @@
                     <el-button
                         @click="
                             () => {
-                                // path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_content',
+                                //  path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_content/:news_praise_number/:news_star_number/:news_created_time',
+
                                 let news_writer_name = ''
                                 getUserNameById(scope.row.news_writer_id)
                                     .then((result) => {
                                         news_writer_name = result
                                         router.push(
-                                            `/admin/editor/${scope.row.news_id}/${scope.row.news_title}/${news_writer_name}/${scope.row.news_content}`
+                                            `/admin/editor/${scope.row.news_id}/${scope.row.news_title}/${news_writer_name}/${scope.row.news_content}/${scope.row.news_praise_number}/${scope.row.news_star_number}/${scope.row.news_created_time}`
                                         )
                                     })
                                     .catch((err) => {
@@ -167,17 +168,11 @@ const news_col = [
     { idx: 6, label: '收藏数' },
     { idx: 7, label: '创建时间' }
 ]
-// interface NewNews extends News {
-//     // 是否是修改状态
-//     edit: boolean
-//     // 判断是修改还是添加的标志 false修改，true添加
-//     // flag: boolean
-// }
 
 let tableData: Array<NewsWithDate> = reactive([])
 
 /**
- * 添加新闻空白数据
+ * 添加新闻新闻
  */
 const addRow = () => {
     // tableData.push({
@@ -189,7 +184,7 @@ const addRow = () => {
 }
 
 /**
- * 初始（新闻|用户）数据
+ * 初始（新闻）数据
  */
 const getData = () => {
     let api = '/api/admin/search/news'

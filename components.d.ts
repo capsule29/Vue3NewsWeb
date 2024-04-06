@@ -7,8 +7,10 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AddWhichCanSee: typeof import('./src/components/AddWhichCanSee.vue')['default']
     AsideMenu: (typeof import('./src/components/Admin/AsideMenu.vue'))['default']
     AuthorityTag: typeof import('./src/components/AuthorityTag.vue')['default']
+    'AuthorityTag未使用': typeof import('./src/components/AuthorityTag未使用.vue')['default']
     Comment: (typeof import('./src/components/Comment.vue'))['default']
     CommentCard: (typeof import('./src/components/CommentCard.vue'))['default']
     CommentSmall: (typeof import('./src/components/News/CommentSmall.vue'))['default']
@@ -20,9 +22,9 @@ declare module 'vue' {
     ElCol: typeof import('element-plus/es')['ElCol']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDivider: typeof import('element-plus/es')['ElDivider']
-    ElDropdown: (typeof import('element-plus/es'))['ElDropdown']
-    ElDropdownItem: (typeof import('element-plus/es'))['ElDropdownItem']
-    ElDropdownMenu: (typeof import('element-plus/es'))['ElDropdownMenu']
+    ElDropdown: typeof import('element-plus/es')['ElDropdown']
+    ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
+    ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
     ElFooter: typeof import('element-plus/es')['ElFooter']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
@@ -50,6 +52,7 @@ declare module 'vue' {
     ElTabs: (typeof import('element-plus/es'))['ElTabs']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElText: typeof import('element-plus/es')['ElText']
+    ElTransfer: typeof import('element-plus/es')['ElTransfer']
     Footer: (typeof import('./src/components/Footer.vue'))['default']
     FooterWord: typeof import('./src/components/FooterWord.vue')['default']
     Header: (typeof import('./src/components/Header.vue'))['default']
@@ -77,6 +80,8 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SelectAuthority: typeof import('./src/components/SelectAuthority.vue')['default']
+    SelectTag: typeof import('./src/components/SelectTag.vue')['default']
+    TransferTag: typeof import('./src/components/TransferTag.vue')['default']
     UserInfo: typeof import('./src/components/UserInfo.vue')['default']
     UsernameInput: (typeof import('./src/components/Login/UsernameInput.vue'))['default']
   }

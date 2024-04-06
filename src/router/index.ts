@@ -21,12 +21,12 @@ const routes = [
             {
                 path: '/admin/news',
                 component: () => import('@/pages/AdminMainNews.vue')
-            },
-            {
-                path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_content',
-                component: () => import('@/pages/AdminMainRichEditor.vue')
             }
         ]
+    },
+    {
+        path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_content/:news_praise_number/:news_star_number/:news_created_time',
+        component: () => import('@/pages/NewsRichEditor.vue')
     }
 ]
 export default createRouter({
