@@ -1,13 +1,14 @@
 <template>
     <div class="bg"></div>
     <el-container class="container">
-        <el-header>
-            <Header />
-        </el-header>
+        <div style="position: sticky; top: 0px; z-index: 3">
+            <el-header>
+                <Header />
+            </el-header>
+        </div>
         <el-main class="el-main">
             <Main />
         </el-main>
-
         <el-footer>
             <FooterWord />
         </el-footer>

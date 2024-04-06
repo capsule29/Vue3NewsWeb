@@ -38,15 +38,17 @@
             </el-col>
 
             <!-- 右侧边栏 -->
-            <el-col :span="8">
-                <el-card
-                    :key="index"
-                    v-for="(item, index) in NewsAsides"
-                    style="min-width: 300px; margin-bottom: 20px"
-                >
-                    <NewsAside :title="item.title" :content="item.content" />
-                </el-card>
-            </el-col>
+            <div>
+                <el-col :span="8" style="position: sticky; top: 60px">
+                    <el-card
+                        :key="index"
+                        v-for="(item, index) in NewsAsides"
+                        style="min-width: 300px; margin-bottom: 20px"
+                    >
+                        <NewsAside :title="item.title" :content="item.content" />
+                    </el-card>
+                </el-col>
+            </div>
         </el-row>
     </div>
 </template>
