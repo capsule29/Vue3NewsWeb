@@ -121,11 +121,11 @@ import { Edit, Check, DeleteFilled, InfoFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
 import type { NewUser } from '@/api/user/UserModel.ts'
-import { getNewUser, addUser, deleteUser, updateUser } from '@/api/user/index'
+import { getNewUser, addUser, deleteUser, updateUser } from '@/api/user/index.ts'
 import type { Authority } from '@/api/authority/AuthorityModel.ts'
-import { getAuthority } from '@/api/authority/index'
+import { getAuthority } from '@/api/authority/index.ts'
 import type { Department } from '@/api/department/DepartmentModel.ts'
-import { getDepartment } from '@/api/department/index'
+import { getDepartment } from '@/api/department/index.ts'
 
 // 用户表头
 const user_col = [
@@ -137,11 +137,14 @@ const user_col = [
 ]
 
 // 用户数据
-let tableData: Array<NewUser> = reactive([])
+type NewUserT = typeof NewUser
+let tableData: Array<NewUserT> = reactive([])
 // 权限列表
-let authority_list: Array<Authority> = reactive([])
+type AuthorityT = typeof Authority
+let authority_list: Array<AuthorityT> = reactive([])
 // 部门列表
-let department_list: Array<Department> = reactive([])
+type DepartmentT = typeof Department
+let department_list: Array<DepartmentT> = reactive([])
 /**
  * 添加用户空白数据
  */

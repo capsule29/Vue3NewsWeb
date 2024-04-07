@@ -154,9 +154,9 @@ import axios from 'axios'
 import { reactive, onMounted } from 'vue'
 import { Edit, DeleteFilled, InfoFilled } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
-import type { NewsWithDate } from '@/api/news/NewsModel'
-import { deleteNews } from '@/api/news/index'
-import { getUserNameById } from '@/api/user/index'
+import type { NewsWithDate } from '@/api/news/NewsModel.ts'
+import { deleteNews } from '@/api/news/index.ts'
+import { getUserNameById } from '@/api/user/index.ts'
 const router = useRouter()
 // 新闻表头
 const news_col = [
@@ -168,8 +168,8 @@ const news_col = [
     { idx: 6, label: '收藏数' },
     { idx: 7, label: '创建时间' }
 ]
-
-let tableData: Array<NewsWithDate> = reactive([])
+type NewsWithDateT = typeof NewsWithDate
+let tableData: Array<NewsWithDateT> = reactive([])
 
 /**
  * 添加新闻新闻
