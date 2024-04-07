@@ -6,14 +6,17 @@
         <el-tab-pane label="Role" name="third">Role</el-tab-pane>
         <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
     </el-tabs> -->
-    <el-row justify="center">
+    <el-row justify="center" v-loading="loading" element-loading-text="Loading...">
         <el-col :span="23">
             <router-view />
         </el-col>
     </el-row>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref, type Ref } from 'vue'
+let loading: Ref<boolean> = ref(true)
+</script>
 
 <style scoped>
 * {
