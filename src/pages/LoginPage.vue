@@ -72,7 +72,7 @@ import { ref, reactive } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
-import { login } from '@/api/login/index'
+import { login } from '@/api/login/index.ts'
 import { getCookie } from 'typescript-cookie'
 import { useRouter } from 'vue-router'
 const router = useRouter()
