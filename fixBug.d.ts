@@ -17,3 +17,5 @@ declare module '@/api/department/DepartmentModel.ts'
 declare module '@/api/department/index.ts'
 
 declare module '@/components/TransferTag.vue'
+
+declare module '@/components/RichEditor.vue'

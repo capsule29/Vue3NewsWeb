@@ -1,11 +1,11 @@
 <!-- 头部 -->
 <template>
     <header>
-            <div class="logoBar">
-                <img src="/src/assets/capsule.ico" alt="" />
-                <span>胶囊科技有限公司新闻网</span>
-            </div>
-            <el-button style="margin-right: 50px" @click="exitLogin"> 退出登录 </el-button>
+        <div class="logoBar">
+            <img src="/src/assets/capsule.ico" alt="" />
+            <span>胶囊科技有限公司新闻网</span>
+        </div>
+        <el-button style="margin-right: 50px" @click="exitLogin"> 退出登录 </el-button>
     </header>
 </template>
 
@@ -22,6 +22,7 @@ const exitLogin = () => {
     removeCookie('user_id')
     removeCookie('user_name')
     removeCookie('is_admin')
+    ElMessage.success('退出成功')
     router.push({ path: '/login', replace: true })
 }
 </script>
