@@ -158,6 +158,7 @@ import type { NewsWithDate } from '@/api/news/NewsModel.ts'
 import { deleteNews } from '@/api/news/index.ts'
 import { getUserNameById } from '@/api/user/index.ts'
 const router = useRouter()
+
 // 新闻表头
 const news_col = [
     { idx: 1, label: '新闻ID' },
@@ -183,10 +184,12 @@ const addRow = () => {
     // })
 }
 
+const emit = defineEmits(['closeLoading', 'openLoading'])
 /**
  * 初始（新闻）数据
  */
 const getData = () => {
+    emit('openLoading')
     let api = '/api/admin/search/news'
     axios
         .get(api)
@@ -203,6 +206,7 @@ const getData = () => {
                 tableData[item].DateString =
                     `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
             }
+            emit('closeLoading')
         })
 }
 /**

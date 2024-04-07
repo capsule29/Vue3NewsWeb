@@ -1,14 +1,7 @@
 <template>
-    <!-- 标签页 -->
-    <!-- <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-        <el-tab-pane label="User" name="first">User</el-tab-pane>
-        <el-tab-pane label="Config" name="second">Config</el-tab-pane>
-        <el-tab-pane label="Role" name="third">Role</el-tab-pane>
-        <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
-    </el-tabs> -->
-    <el-row justify="center" v-loading="loading" element-loading-text="Loading...">
+    <el-row justify="center" v-loading="loading" element-loading-text="加载中...">
         <el-col :span="23">
-            <router-view />
+            <router-view @close-loading="closeLoading" @open-loading="openLoading" />
         </el-col>
     </el-row>
 </template>
@@ -16,10 +9,16 @@
 <script setup lang="ts">
 import { ref, type Ref } from 'vue'
 let loading: Ref<boolean> = ref(true)
+const closeLoading = () => {
+    // setTimeout(() => {
+    //     loading.value = false
+    // }, 500)
+    loading.value = false
+}
+
+const openLoading = () => {
+    loading.value = true
+}
 </script>
 
-<style scoped>
-* {
-    /* overflow-y: scroll; */
-}
-</style>
+<style scoped></style>

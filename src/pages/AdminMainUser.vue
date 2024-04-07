@@ -158,8 +158,10 @@ const addRow = () => {
     })
 }
 
+const emit = defineEmits(['closeLoading', 'openLoading'])
 // 数据初始化
 const getData = () => {
+    emit('openLoading')
     // 初始化用户表格数据
     getNewUser()
         .then((result) => {
@@ -183,6 +185,9 @@ const getData = () => {
         })
         .catch((err: any) => {
             throw err
+        })
+        .finally(() => {
+            emit('closeLoading')
         })
 }
 
