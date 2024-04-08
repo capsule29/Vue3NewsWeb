@@ -6,6 +6,7 @@ interface News {
     news_praise_number?: number
     news_star_number?: number
     news_created_time?: string
+    news_dps?: string
 }
 interface NewsWithDate extends News {
     DateString?: string

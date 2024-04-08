@@ -71,6 +71,7 @@ declare module 'vue' {
     NewsCard: typeof import('./src/components/NewsCard.vue')['default']
     NewsComment: typeof import('./src/components/NewsComment.vue')['default']
     NewsCommentCard: typeof import('./src/components/NewsCommentCard.vue')['default']
+    'NewsCommentCard空': typeof import('./src/components/NewsCommentCard空.vue')['default']
     NewsCommentView: (typeof import('./src/components/NewsCommentView.vue'))['default']
     NewsDetail: (typeof import('./src/components/News/NewsDetail.vue'))['default']
     'NewsDetail废弃': typeof import('./src/components/NewsDetail废弃.vue')['default']
@@ -86,6 +87,7 @@ declare module 'vue' {
     SelectTag: typeof import('./src/components/SelectTag.vue')['default']
     TransferTag: typeof import('./src/components/TransferTag.vue')['default']
     UserInfo: typeof import('./src/components/UserInfo.vue')['default']
+    'UserInfo空': typeof import('./src/components/UserInfo空.vue')['default']
     UsernameInput: (typeof import('./src/components/Login/UsernameInput.vue'))['default']
   }
   export interface ComponentCustomProperties {

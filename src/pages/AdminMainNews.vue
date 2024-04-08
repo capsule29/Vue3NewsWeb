@@ -105,25 +105,7 @@
             <el-table-column label="操作" width="220" align="center" header-align="center">
                 <template #default="scope">
                     <!-- 编辑 -->
-                    <el-button
-                        @click="
-                            () => {
-                                //  path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_content/:news_praise_number/:news_star_number/:news_created_time',
-
-                                let news_writer_name = ''
-                                getUserNameById(scope.row.news_writer_id)
-                                    .then((result) => {
-                                        news_writer_name = result
-                                        router.push(
-                                            `/admin/editor/${scope.row.news_id}/${scope.row.news_title}/${news_writer_name}/${scope.row.news_content}/${scope.row.news_praise_number}/${scope.row.news_star_number}/${scope.row.news_created_time}`
-                                        )
-                                    })
-                                    .catch((err) => {
-                                        throw err
-                                    })
-                            }
-                        "
-                    >
+                    <el-button @click="editFnc(scope)">
                         <el-icon> <edit /> </el-icon>内容编辑
                     </el-button>
                     <el-popconfirm
@@ -171,7 +153,6 @@ const news_col = [
 ]
 type NewsWithDateT = typeof NewsWithDate
 let tableData: Array<NewsWithDateT> = reactive([])
-
 /**
  * 添加新闻新闻
  */
@@ -184,6 +165,22 @@ const addRow = () => {
     // })
 }
 
+const editFnc = (scope: any) => {
+    //  path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_content/:news_praise_number/:news_star_number/:news_created_time/:news_dps',
+
+    let news_writer_name = ''
+    getUserNameById(scope.row.news_writer_id)
+        .then((result) => {
+            news_writer_name = result
+            // console.log(tableData[scope.$index].news_dps)
+            router.push(
+                `/admin/editor/${scope.row.news_id}/${scope.row.news_title}/${news_writer_name}/${scope.row.news_content}/${scope.row.news_praise_number}/${scope.row.news_star_number}/${scope.row.news_created_time}/${tableData[scope.$index].news_dps}`
+            )
+        })
+        .catch((err) => {
+            throw err
+        })
+}
 const emit = defineEmits(['closeLoading', 'openLoading'])
 /**
  * 初始（新闻）数据

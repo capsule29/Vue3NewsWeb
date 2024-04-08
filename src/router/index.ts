@@ -25,7 +25,7 @@ const routes = [
         ]
     },
     {
-        path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_content/:news_praise_number/:news_star_number/:news_created_time',
+        path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_content/:news_praise_number/:news_star_number/:news_created_time/:news_dps',
         component: () => import('@/pages/NewsRichEditor.vue')
     }
 ]

@@ -4,7 +4,7 @@
         <el-col :span="20" style="margin: 0px auto">
             <el-card style="margin: 20px 0px">
                 <template #header>
-                    <el-link :underline="false" @click.prevent="goBack()">
+                    <el-link :underline="false" @click.prevent="goBack()" type="primary">
                         <el-icon><ArrowLeftBold /> </el-icon>
                         返回
                     </el-link>
@@ -109,7 +109,16 @@
                         <el-card shadow="hover" style="text-align: center">
                             <!-- 卡片头 -->
                             <template #header> 部门能见度 </template>
-                            <TransferTag />
+                            <TransferTag
+                                @dps="
+                                    (edited_dps) => {
+                                        editNews.news_dps = edited_dps
+                                        // console.log('父组件，事件')
+                                        // console.log(editNews.news_dps)
+                                    }
+                                "
+                                :news_dps="editNews.news_dps"
+                            />
                         </el-card>
                     </el-col>
                 </el-row>
@@ -117,12 +126,22 @@
                 <!-- 卡片尾 -->
                 <template #footer>
                     <div style="text-align: center">
-                        <el-button type="success" size="large">保存</el-button>
-                        <el-button type="info" size="large" plain @click.prevent="goBack()"
-                            >返回</el-button
+                        <el-button
+                            type="success"
+                            size="large"
+                            @click.prevent="
+                                updateContentAndDps(editNews.news_id, richHtml, editNews.news_dps)
+                            "
                         >
-                        <!-- <el-button @click="look(1)"> 查看editorValue内容 </el-button>
-                                <el-button @click="look(2)"> 查看richHtml内容 </el-button> -->
+                            保存
+                        </el-button>
+                        <el-button type="info" size="large" plain @click.prevent="goBack()">
+                            返回
+                        </el-button>
+                        <!-- <el-button @click="look(1)"> 查看editorValue内容 </el-button>-->
+                        <el-button @click="() => console.log(richHtml)">
+                            查看richHtml内容
+                        </el-button>
                     </div>
                 </template>
             </el-card>
@@ -133,7 +152,6 @@
 import RichEditor from '@/components/RichEditor.vue'
 import TransferTag from '@/components/TransferTag.vue'
 import { ArrowLeftBold } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
 
 // const editorValue = ref('在此输入新闻内容') // 富文本引用，初始值，不改变
 import { ref } from 'vue'
@@ -146,6 +164,8 @@ const handleUpdateValue = (val: any) => {
     // console.log(val)
     richHtml.value = val
 }
+
+// const edited_dps: Ref<string> = ref('')
 
 import { reactive } from 'vue'
 import type { News } from '@/api/news/NewsModel.ts'
@@ -164,8 +184,8 @@ const changeTitleFlag = () => {
  * 保存标题
  */
 const saveTitle = () => {
+    updateNewsTitle(editNews.news_id, editNews.news_title)
     changeTitleFlag()
-    ElMessage.success('修改成功')
 }
 
 import { useRoute } from 'vue-router'
@@ -181,10 +201,12 @@ let editNews: newsNews = reactive({
     // news_writer_id: route.params.news_writer_id as string,
     news_praise_number: Number(route.params.news_praise_number),
     news_star_number: Number(route.params.news_star_number),
-    news_created_time: route.params.news_created_time as string
+    news_created_time: route.params.news_created_time as string,
+    news_dps: route.params.news_dps as string
 })
 
 import { useRouter } from 'vue-router'
+import { updateContentAndDps, updateNewsTitle } from '../api/news'
 const router = useRouter()
 const goBack = () => {
     router.back()

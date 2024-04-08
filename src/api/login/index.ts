@@ -12,11 +12,12 @@ const login = async (user_name: string, password: string, authority_id: number):
         })
         .then((solution) => {
             if (typeof solution === 'object') {
-                const data = solution.data
-                console.log(data)
+                // const data = solution.data
+                // console.log(data)
             } else {
-                // 用户不唯一，数据库里应该不会有重复（
                 ElMessage.error('账户非法')
+                throw new Error('账户非法')
+                // 用户不唯一，数据库里应该不会有重复（
             }
         })
         .catch((err) => {
