@@ -10,10 +10,9 @@
 </template>
 
 <script setup lang="ts">
-// import { ref, reactive } from 'vue'
 import { onMounted, reactive } from 'vue'
 import { Authority } from '../api/authority/AuthorityModel'
-import { getAuthority } from '../api/authority'
+import { getAuthority } from '@/api/authority/index'
 
 const props = defineProps<{
     ruleForm: Authority

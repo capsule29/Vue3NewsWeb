@@ -63,7 +63,7 @@ type NewsT = typeof News
 interface newsDataInterface extends NewsT {
     // [propName: string]: any
     // 非接口参数
-    is_open_comment_status?: boolean
+    is_open_comment_status: boolean
 }
 
 /* ====================数据==================== */
@@ -157,15 +157,15 @@ const getData = (): void => {
     getNewsCanSee(department_id)
         .then((result) => {
             news_data_list.push(...result)
+            for (let i = 0; i < news_data_list.length; i++) {
+                news_data_list[i].is_open_comment_status = false
+            }
             // console.log('数据')
             // console.log(news_data_list)
         })
         .catch((err) => {
             throw err
         })
-    for (let i = 0; i < news_data_list.length; i++) {
-        news_data_list[i].is_open_comment_status = false
-    }
 }
 
 onMounted((): void => {

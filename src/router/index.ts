@@ -12,7 +12,7 @@ const routes = [
     {
         path: '/admin',
         component: () => import('@/layout/AdminLayout.vue'),
-        redirect: '/admin/user',
+        redirect: '/admin/news',
         children: [
             {
                 path: '/admin/user',

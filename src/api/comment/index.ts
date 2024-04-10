@@ -56,7 +56,7 @@ const addComment = (news_id: number, user_id: number, comment_content: string): 
  * @param comment_id
  */
 const deleteComment = (comment_id: number): void => {
-    const api = '/api/comment/add'
+    const api = '/api/comment/delete'
     axios
         .get(api, {
             params: {

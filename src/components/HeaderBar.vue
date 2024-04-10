@@ -7,17 +7,25 @@
         </div>
         <div>
             <el-text style="margin-right: 50px" type="info"
-                >欢迎您，{{ getCookie('user_name') }}
+                >欢迎您，来自{{ getCookie('department_name') }}的{{ getCookie('user_name') }}
             </el-text>
+            <el-button
+                v-if="route.fullPath.includes('/news')"
+                style="margin-right: 20px"
+                @click="router.back()"
+            >
+                返回控制台
+            </el-button>
             <el-button style="margin-right: 50px" @click="exitLogin"> 退出登录 </el-button>
         </div>
     </header>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { getCookie, removeCookie } from 'typescript-cookie'
 const router = useRouter()
+const route = useRoute()
 
 /**
  * 退出登录
@@ -28,6 +36,7 @@ const exitLogin = () => {
     removeCookie('user_name')
     removeCookie('authority_id')
     removeCookie('department_id')
+    removeCookie('department_name')
 
     ElMessage.success('退出成功')
     router.push({ path: '/login', replace: true })

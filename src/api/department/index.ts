@@ -84,4 +84,23 @@ const updateDepartment = (department_id: number, department_name: string) => {
             throw err
         })
 }
-export { getDepartment, addDepartment, deleteDepartment, updateDepartment }
+
+const getDepartmentNameById = async (department_id: number): Promise<string[]> => {
+    const api = '/api/department/select/byId'
+    const data: string[] = []
+    await axios
+        .get(api, {
+            params: {
+                department_id
+            }
+        })
+        .then((result) => {
+            data.push(...result.data)
+        })
+        .catch((err) => {
+            ElMessage.error('获取部门名失败')
+            throw err
+        })
+    return data
+}
+export { getDepartment, addDepartment, deleteDepartment, updateDepartment, getDepartmentNameById }

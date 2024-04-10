@@ -69,12 +69,14 @@
 <script setup lang="ts">
 //#region 导入
 import { ref, reactive } from 'vue'
+import { getCookie, setCookie } from 'typescript-cookie'
+import { useRouter } from 'vue-router'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
-import { login } from '@/api/login/index.ts'
-import { getCookie } from 'typescript-cookie'
-import { useRouter } from 'vue-router'
+
+import { login } from '@/api/login/index'
+import { getDepartmentNameById } from '@/api/department/index'
 const router = useRouter()
 //#endregion
 
@@ -126,18 +128,27 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             // 验证成功登录
             login(ruleForm.user_name, ruleForm.password, ruleForm.authority_id as number).then(
                 () => {
-                    // vue router 跳转，replace不留历史记录
-                    if (getCookie('authority_id') == '1') {
-                        // 管理员
-                        router.push({ path: '/admin', replace: true })
-                    } else if (getCookie('authority_id') == '2') {
-                        // 编辑
-                        router.push({ path: '', replace: true })
-                    } else if (getCookie('authority_id') == '3') {
-                        // 用户
-                        router.push({ path: '/news', replace: true })
-                    }
-                    ElMessage.success('登陆成功')
+                    // 得到部门名称数据
+                    getDepartmentNameById(getCookie('department_id')).then((result) => {
+                        // console.log(result[0].department_name)
+                        setCookie('department_name', result[0].department_name)
+
+                        // vue router 跳转，replace不留历史记录
+                        if (getCookie('authority_id') == '1') {
+                            // 管理员
+                            router.push({ path: '/admin', replace: true })
+                        } else if (getCookie('authority_id') == '2') {
+                            // 编辑
+                            router.push({ path: '/news', replace: true })
+                        } else if (getCookie('authority_id') == '3') {
+                            // 用户
+                            router.push({ path: '/news', replace: true })
+                        } else {
+                            // 其他
+                            router.push({ path: '/news', replace: true })
+                        }
+                        ElMessage.success('登陆成功')
+                    })
                 }
             )
         } else {

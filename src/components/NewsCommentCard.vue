@@ -1,62 +1,70 @@
 <!-- 评论卡片 -->
 <template>
-    用户 {{ user_name }} 说：
+    <div style="margin-left: 10px">
+        {{ props.comment.user_name }} 说：
 
-    <el-popconfirm
-        width="220"
-        confirm-button-text="删除"
-        cancel-button-text="取消"
-        icon-color="#626AEF"
-        title="确定要删除该评论吗？"
-        @confirm="deleteComment()"
-    >
-        <template #reference>
-            <div style="position: relative; left: 730px">
-                <el-icon><Delete /></el-icon>
-            </div>
-        </template>
-    </el-popconfirm>
-
-    {{ props.comment.comment_content }}
-    <br />
-    <span style="position: relative; left: 600px">
+        <el-popconfirm
+            width="220"
+            confirm-button-text="删除"
+            cancel-button-text="取消"
+            icon-color="#626AEF"
+            title="确定要删除该评论吗？"
+            @confirm="
+                deleteComment(props.comment.comment_id), emit('deleteCommentData', props.index)
+            "
+            v-if="showDelete()"
+        >
+            <template #reference>
+                <div style="width: 10px; position: relative; left: 690px">
+                    <el-icon>
+                        <Delete />
+                    </el-icon>
+                </div>
+            </template>
+        </el-popconfirm>
+        <div v-else>
+            <br />
+        </div>
+        {{ props.comment.comment_content }}
+        <br />
+        <br />
         <el-text type="info">
             评论于
-            {{ comment_created_time.getFullYear() }}年 {{ comment_created_time.getMonth() + 1 }}月
-            {{ comment_created_time.getDate() }}日
+            {{ comment_created_time.getFullYear() }}年{{ comment_created_time.getMonth() + 1 }}月{{
+                comment_created_time.getDate()
+            }}日
         </el-text>
-    </span>
-    <el-divider />
+    </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { MyComment } from '@/api/comment/CommentModel'
-import { getUserNameById } from '@/api/user/index.ts'
 import { Delete } from '@element-plus/icons-vue'
-import { deleteComment } from '@/api/comment/index.ts'
+import { getCookie } from 'typescript-cookie'
+
+import { deleteComment } from '@/api/comment/index'
+import { MyComment } from '@/api/comment/CommentModel'
 
 type MyCommentT = typeof MyComment
 const props = defineProps<{
     comment: MyCommentT
+    index: number
 }>()
 
+const emit = defineEmits(['deleteCommentData'])
 /**
- * @description 删除确认
+ * 判断是否满足删除评论的条件
  */
-const deleteComfire = () => {}
+const showDelete = (): boolean => {
+    // console.log(props.comment.user_id)
+    // console.log(getCookie('authority_id'))
+    return getCookie('user_id') == props.comment.user_id || getCookie('authority_id') == '1'
+}
+
 const comment_created_time = new Date(props.comment.comment_created_time)
-const user_name = ref('')
-onMounted(() => {
-    getUserNameById(props.comment.user_id)
-        .then((result) => {
-            user_name.value = result
-        })
-        .catch((err) => {
-            ElMessage.error('用户名映射失败')
-            throw err
-        })
-})
+// const user_name = ref('')
+// onMounted(() => {
+
+// })
 </script>
 
 <style scoped></style>

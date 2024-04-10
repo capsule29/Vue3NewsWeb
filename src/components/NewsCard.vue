@@ -8,8 +8,9 @@
             <span style="position: relative">
                 <el-text type="info">
                     发布于
-                    {{ news_created_time.getFullYear() }}年 {{ news_created_time.getMonth() + 1 }}月
-                    {{ news_created_time.getDate() }}日
+                    {{ news_created_time.getFullYear() }}年{{
+                        news_created_time.getMonth() + 1
+                    }}月{{ news_created_time.getDate() }}日
                 </el-text>
             </span>
         </div>

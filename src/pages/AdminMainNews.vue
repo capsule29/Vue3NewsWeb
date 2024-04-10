@@ -144,42 +144,42 @@ const getData = () => {
     emit('openLoading')
 
     type UserT = typeof User
-    /**
-     * @description 方便获取作者名数据
-     */
+
+    // 方便获取作者名数据
     const user_list: UserT[] = []
     getAllUsers()
         .then((result) => {
             user_list.push(...result)
+
+            // 得到所有的新闻数据
+            getAllNews()
+                .then((result) => {
+                    tableData.push(...result)
+                })
+                .catch((err) => {
+                    ElMessage.error('新闻信息获取失败')
+                    throw err
+                })
+                .finally(() => {
+                    for (let index in tableData) {
+                        // 拼接日期字符串
+                        const date = new Date(tableData[index].news_created_time as string)
+                        tableData[index].DateString =
+                            `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
+
+                        // 作者id映射到作者名
+                        for (let i in user_list) {
+                            if (tableData[index].news_writer_id == user_list[i].user_id) {
+                                tableData[index].news_writer_name = user_list[i].user_name
+                            }
+                        }
+                    }
+                    emit('closeLoading')
+                })
         })
         .catch((err) => {
             ElMessage.error('作者信息获取失败')
             throw err
-        })
-
-    getAllNews()
-        .then((result) => {
-            tableData.push(...result)
-        })
-        .catch((err) => {
-            ElMessage.error('新闻信息获取失败')
-            throw err
-        })
-        .finally(() => {
-            for (let index in tableData) {
-                // 拼接日期字符串
-                const date = new Date(tableData[index].news_created_time as string)
-                tableData[index].DateString =
-                    `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
-
-                // 作者id映射到作者名
-                for (let i in user_list) {
-                    if (tableData[index].news_writer_id == user_list[i].user_id) {
-                        tableData[index].news_writer_name = user_list[i].user_name
-                    }
-                }
-            }
-            emit('closeLoading')
         })
 }
 
