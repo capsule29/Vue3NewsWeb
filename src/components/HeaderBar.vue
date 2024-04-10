@@ -5,13 +5,18 @@
             <img src="/src/assets/capsule.ico" alt="" />
             <span>胶囊科技有限公司新闻网</span>
         </div>
-        <el-button style="margin-right: 50px" @click="exitLogin"> 退出登录 </el-button>
+        <div>
+            <el-text style="margin-right: 50px" type="info"
+                >欢迎您，{{ getCookie('user_name') }}
+            </el-text>
+            <el-button style="margin-right: 50px" @click="exitLogin"> 退出登录 </el-button>
+        </div>
     </header>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { removeCookie } from 'typescript-cookie'
+import { getCookie, removeCookie } from 'typescript-cookie'
 const router = useRouter()
 
 /**
@@ -21,7 +26,9 @@ const exitLogin = () => {
     // 清除cookie
     removeCookie('user_id')
     removeCookie('user_name')
-    removeCookie('is_admin')
+    removeCookie('authority_id')
+    removeCookie('department_id')
+
     ElMessage.success('退出成功')
     router.push({ path: '/login', replace: true })
 }

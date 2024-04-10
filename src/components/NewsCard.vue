@@ -3,16 +3,21 @@
     <div class="card">
         <!-- 跳转bug href -->
         <div class="title">
-            <a href="">{{ news_title }}</a>
+            <a href=""> {{ news.news_title }}</a>
+            <br />
+            <span style="position: relative">
+                <el-text type="info">
+                    发布于
+                    {{ news_created_time.getFullYear() }}年 {{ news_created_time.getMonth() + 1 }}月
+                    {{ news_created_time.getDate() }}日
+                </el-text>
+            </span>
         </div>
-
-        <!-- 新闻图片待办 -->
-        <img src="" alt="" />
-
         <br />
-
         <el-link type="primary" :underline="false">
-            <el-text type="" size="large" line-clamp="3" style="">{{ news_content }}</el-text>
+            <el-text type="" size="large" line-clamp="5" style="">
+                <div v-html="news.news_content"></div>
+            </el-text>
         </el-link>
         <br />
         <el-link type="primary" :underline="false">
@@ -26,31 +31,29 @@
                 plain
                 type="primary"
                 @click="
-                    $emit('addReduce', !is_praise, index, 'praise', news_id),
+                    $emit('addReduce', !is_praise, index, 'praise', news.news_id),
                         (is_praise = !is_praise)
                 "
             >
-                <el-icon class="el-icon--left">
-                    <ArrowUpBold />
-                </el-icon>
-                <span v-if="is_praise">已</span>赞 {{ news_praise_number }}
+                <el-icon class="el-icon--left"> <ArrowUpBold /> </el-icon>
+                <span v-if="is_praise">已</span>赞 {{ news.news_praise_number }}
             </el-button>
             <!-- 收藏开关 -->
             <el-button
                 plain
                 type="primary"
-                @click="$emit('addReduce', !is_star, index, 'star', news_id), (is_star = !is_star)"
+                @click="
+                    $emit('addReduce', !is_star, index, 'star', news.news_id), (is_star = !is_star)
+                "
             >
                 <el-icon class="el-icon--left">
-                    <StarFilled v-if="is_star" />
-                    <Star v-else />
+                    <StarFilled v-if="is_star" /> <Star v-else />
                 </el-icon>
-                <span v-if="is_star">已</span>收藏 {{ news_star_number }}
+                <span v-if="is_star">已</span>收藏 {{ news.news_star_number }}
             </el-button>
 
             <!-- 打开小评论区 -->
             <el-button
-                type="pain"
                 :icon="ChatLineSquare"
                 text
                 @click="$emit('openComment', index), changeCommentString"
@@ -65,21 +68,14 @@
 /* ====================导入==================== */
 import { onBeforeUpdate, ref, type Ref } from 'vue'
 import { ArrowUpBold, Star, StarFilled, ChatLineSquare } from '@element-plus/icons-vue'
-
+import { News } from '@/api/news/NewsModel'
+type NewsT = typeof News
 /* ====================NewsMain组件传参==================== */
-let props = defineProps<{
+const props = defineProps<{
     index: number
-    news_id: number
-    news_title: string
-    news_content: string
-    news_img?: string
-    news_praise_number: number
-    news_star_number: number
-    news_created_at: string
-    // img: string
+    news: NewsT
     is_open_comment_status: boolean
 }>()
-
 /* ====================变量==================== */
 // 该新闻是否被用户收藏
 let is_star: Ref<boolean> = ref(false)
@@ -88,8 +84,8 @@ let is_praise: Ref<boolean> = ref(false)
 // 评论是否展开
 let is_open_str: Ref<string> = ref('展开评论')
 
+const news_created_time = new Date(props.news.news_created_time)
 /* ====================函数==================== */
-
 /**
  * 改变按钮值
  */
@@ -97,10 +93,10 @@ const changeCommentString = () => {
     if (props.is_open_comment_status) is_open_str.value = '折叠评论'
     else is_open_str.value = '展开评论'
 }
-
 /* ====================生命周期==================== */
 onBeforeUpdate(() => {
     changeCommentString()
+    // document.getElementById('content').innerHTML = props.news_content
 })
 </script>
 

@@ -10,7 +10,8 @@
                     <Header />
                 </el-header>
 
-                <el-main>
+                <el-main style="max-height: 575px; overflow-y: scroll">
+                    <div class="bg"></div>
                     <AdminMain />
                 </el-main>
 
@@ -49,5 +50,17 @@ import Menu from '@/views/AdminAside.vue' /*标签页*/
     color: #6b778c;
     font-size: 32px;
     font-weight: 600;
+}
+
+.bg {
+    background-image: url('@/assets/bg5.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 53px;
+    z-index: -1;
 }
 </style>

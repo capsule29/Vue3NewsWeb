@@ -6,7 +6,7 @@
         :titles="['可见部门', '不可见部门']"
         @change="changeEditedDps"
     />
-    <button @click="() => console.log(edited_dps)">help me</button>
+    <!-- <button @click="() => console.log(edited_dps)">debug</button> -->
 </template>
 
 <script lang="ts" setup>

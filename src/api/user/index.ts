@@ -3,8 +3,30 @@ import type { NewUser, User } from './UserModel'
 import { ElMessage } from 'element-plus'
 import MD5 from 'crypto-js/md5'
 
+/**
+ * @description 得到所有用户数据
+ * @returns Promise<User[]>
+ */
+const getAllUsers = async (): Promise<User[]> => {
+    const data: User[] = []
+    const api = '/api/user/select/all'
+    await axios
+        .get(api)
+        .then((result) => {
+            data.push(...(result.data as User[]))
+        })
+        .catch((err) => {
+            throw err
+        })
+    return data
+}
+
+/**
+ * @description 得到能够修改的用户数据（管理员页面）
+ * @returns Promise<NewUser[]>
+ */
 const getNewUser = async (): Promise<NewUser[]> => {
-    const api = '/api/admin/search/user'
+    const api = '/api/user/select'
     const tableData: NewUser[] = []
     await axios
         .get(api)
@@ -24,6 +46,11 @@ const getNewUser = async (): Promise<NewUser[]> => {
     return tableData
 }
 
+/**
+ * @description 通过用户id得到用户名
+ * @param user_id
+ * @returns Promise<string>
+ */
 const getUserNameById = async (user_id: number): Promise<string> => {
     const api = '/api/user/get_name_by_id'
     let data = ''
@@ -42,17 +69,27 @@ const getUserNameById = async (user_id: number): Promise<string> => {
     return data
 }
 
-const addUser = (user: User) => {
-    console.log(user)
-
-    const api = '/api/admin/add/user'
+/**
+ * @description 添加用户
+ * @param user_name
+ * @param password
+ * @param authority_id
+ * @param department_id
+ */
+const addUser = (
+    user_name: string,
+    password: string,
+    authority_id: number,
+    department_id: number
+) => {
+    const api = '/api/user/add'
     axios
         .get(api, {
             params: {
-                user_name: user.user_name,
-                password: MD5(MD5(user.password as string)).toString(),
-                authority_id: user.authority_id,
-                department_id: user.department_id
+                user_name,
+                password: MD5(MD5(password)).toString(),
+                authority_id,
+                department_id
             }
         })
         .then(() => {
@@ -69,16 +106,30 @@ const addUser = (user: User) => {
         })
 }
 
-const updateUser = (user: User) => {
-    const api = '/api/admin/update/user'
+/**
+ * @description 更新用户信息
+ * @param user_id
+ * @param user_name
+ * @param password
+ * @param authority_id
+ * @param department_id
+ */
+const updateUser = (
+    user_id: number,
+    user_name: string,
+    password: string,
+    authority_id: number,
+    department_id: number
+) => {
+    const api = '/api/user/update'
     axios
         .get(api, {
             params: {
-                user_id: user.user_id,
-                user_name: user.user_name,
-                password: MD5(MD5(user.password as string)).toString(),
-                authority_id: user.authority_id,
-                department_id: user.department_id
+                user_id,
+                user_name,
+                password: MD5(MD5(password)).toString(),
+                authority_id,
+                department_id
             }
         })
         .then(() => {
@@ -96,23 +147,24 @@ const updateUser = (user: User) => {
         })
 }
 
-const deleteUser = (user: User) => {
-    const api = '/api/admin/delete/user'
-    if (user.user_id != null) {
-        axios
-            .get(api, {
-                params: {
-                    user_id: user.user_id
-                }
-            })
-            .then(() => {
-                ElMessage.success('删除成功！')
-            })
-            .catch((err) => {
-                throw err
-            })
-    } else {
-        ElMessage.success('删除成功！')
-    }
+/**
+ * @description 删除用户
+ * @param user_id
+ */
+const deleteUser = (user_id: number) => {
+    const api = '/api/user/delete'
+    axios
+        .get(api, {
+            params: {
+                user_id
+            }
+        })
+        .then(() => {
+            ElMessage.success('删除成功！')
+        })
+        .catch((err) => {
+            throw err
+        })
 }
-export { getNewUser, getUserNameById, addUser, updateUser, deleteUser }
+
+export { getAllUsers, getNewUser, getUserNameById, addUser, updateUser, deleteUser }

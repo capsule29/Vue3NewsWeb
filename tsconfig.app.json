@@ -4,22 +4,24 @@
         "env.d.ts",
         "src/**/*",
         "src/**/*.vue",
-        "@/components/UserInfo.vue",
-        "@/components/OptionBtn.vue"
-        // "src/api/**/*.ts"
     ],
-    // "files": ["src/api/authority/index.ts"],
     "exclude": [
         "src/**/__tests__/*"
     ],
     "compilerOptions": {
         "composite": true,
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-        "baseUrl": ".",
-        "paths": {
+        "baseUrl": "./",
+        "paths": { // 自定义
             "@/*": [
                 "./src/*"
-            ]
-        }
+            ],
+            // "@api/*": [
+            //     "./src/api/*"
+            // ],
+        },
+        "allowImportingTsExtensions": true, // 自定义
+        // "declaration": true, //自定义
+        // "declarationDir": "./declaration", //自定义
     }
 }

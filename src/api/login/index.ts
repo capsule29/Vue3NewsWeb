@@ -2,6 +2,12 @@ import axios from 'axios'
 import { LoginParams } from './LoginModel'
 import { ElMessage } from 'element-plus'
 
+/**
+ * @description 登录
+ * @param user_name
+ * @param password
+ * @param authority_id
+ */
 const login = async (user_name: string, password: string, authority_id: number): Promise<void> => {
     // 创建登录参数实例
     const loginParams: LoginParams = new LoginParams(user_name, password, authority_id)

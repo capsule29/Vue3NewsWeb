@@ -1,9 +1,6 @@
 <template>
     <el-card style="margin-top: 20px">
         <el-table :data="tableData" style="width: 100%" border stripe height="481">
-            <template #header>
-                <div class="card-header" style="text-align: center">用户列表</div>
-            </template>
             <el-table-column
                 :key="index"
                 v-for="(item, index) in user_col"
@@ -120,12 +117,14 @@ import { reactive, onMounted } from 'vue'
 import { Edit, Check, DeleteFilled, InfoFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
-import type { NewUser } from '@/api/user/UserModel.ts'
-import { getNewUser, addUser, deleteUser, updateUser } from '@/api/user/index.ts'
-import type { Authority } from '@/api/authority/AuthorityModel.ts'
-import { getAuthority } from '@/api/authority/index.ts'
-import type { Department } from '@/api/department/DepartmentModel.ts'
-import { getDepartment } from '@/api/department/index.ts'
+import type { NewUser } from '@/api/user/UserModel'
+import { getNewUser, addUser, deleteUser, updateUser } from '@/api/user/index'
+
+import type { Authority } from '@/api/authority/AuthorityModel'
+import { getAuthority } from '@/api/authority/index'
+
+import type { Department } from '@/api/department/DepartmentModel'
+import { getDepartment } from '@/api/department/index'
 
 // 用户表头
 const user_col = [
@@ -221,10 +220,10 @@ const handleSave = (index: any, row: any): Boolean => {
     tableData[index] = row
     if (row.flag) {
         // 添加的
-        addUser(row)
+        addUser(row.user_name, row.password, row.authority_id, row.department_id)
     } else {
         // 修改的
-        updateUser(row)
+        updateUser(row.user_id, row.user_name, row.password, row.authority_id, row.department_id)
     }
 
     return true
@@ -234,7 +233,7 @@ const handleSave = (index: any, row: any): Boolean => {
  */
 const handleDelete = (index: any, row: any) => {
     tableData.splice(index, 1)
-    deleteUser(row)
+    deleteUser(row.user_id)
 }
 </script>
 

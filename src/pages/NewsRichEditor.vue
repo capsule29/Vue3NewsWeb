@@ -1,8 +1,8 @@
 <template>
-    <div class="bg"></div>
     <el-row>
-        <el-col :span="20" style="margin: 0px auto">
+        <el-col :span="24" style="margin: 0px auto">
             <el-card style="margin: 20px 0px">
+                <!-- 卡片头部返回按钮 -->
                 <template #header>
                     <el-link :underline="false" @click.prevent="goBack()" type="primary">
                         <el-icon><ArrowLeftBold /> </el-icon>
@@ -19,6 +19,7 @@
                         @update:modelValue="handleUpdateValue"
                     ></RichEditor>
                 </el-card>
+                <!-- 基本信息&可见部门穿梭框 -->
                 <el-row justify="space-evenly">
                     <el-col :span="9">
                         <el-card shadow="hover" style="text-align: center">
@@ -130,7 +131,11 @@
                             type="success"
                             size="large"
                             @click.prevent="
-                                updateContentAndDps(editNews.news_id, richHtml, editNews.news_dps)
+                                updateNewsContentAndDps(
+                                    editNews.news_id,
+                                    richHtml,
+                                    editNews.news_dps
+                                )
                             "
                         >
                             保存
@@ -139,9 +144,9 @@
                             返回
                         </el-button>
                         <!-- <el-button @click="look(1)"> 查看editorValue内容 </el-button>-->
-                        <el-button @click="() => console.log(richHtml)">
+                        <!-- <el-button @click="() => console.log(richHtml)">
                             查看richHtml内容
-                        </el-button>
+                        </el-button> -->
                     </div>
                 </template>
             </el-card>
@@ -149,12 +154,19 @@
     </el-row>
 </template>
 <script lang="ts" setup>
-import RichEditor from '@/components/RichEditor.vue'
-import TransferTag from '@/components/TransferTag.vue'
+import { onMounted, ref, type Ref, reactive } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeftBold } from '@element-plus/icons-vue'
 
+import RichEditor from '@/components/RichEditor.vue'
+import TransferTag from '@/components/TransferTag.vue'
+import type { News } from '@/api/news/NewsModel'
+import { getNewContentById, updateNewsContentAndDps, updateNewsTitle } from '@/api/news/index'
+
+const route = useRoute()
+const router = useRouter()
+
 // const editorValue = ref('在此输入新闻内容') // 富文本引用，初始值，不改变
-import { ref } from 'vue'
 const richHtml = ref() // 富文本内容；改变后的值
 
 /**
@@ -166,15 +178,11 @@ const handleUpdateValue = (val: any) => {
 }
 
 // const edited_dps: Ref<string> = ref('')
-
-import { reactive } from 'vue'
-import type { News } from '@/api/news/NewsModel.ts'
 type NewsTemp = typeof News
 interface newsNews extends NewsTemp {
     news_writer_name: string
 }
 
-import type { Ref } from 'vue'
 let title_flag: Ref<boolean> = ref(false)
 const changeTitleFlag = () => {
     title_flag.value = !title_flag.value
@@ -188,16 +196,14 @@ const saveTitle = () => {
     changeTitleFlag()
 }
 
-import { useRoute } from 'vue-router'
-const route = useRoute()
 /**
  * @description 正在修改的新闻
  */
-let editNews: newsNews = reactive({
+const editNews: newsNews = reactive({
     news_id: Number(route.params.news_id),
     news_title: route.params.news_title as string,
     news_writer_name: route.params.news_writer_name as string,
-    news_content: route.params.news_content as string, // 富文本引用，初始值，不改变
+    news_content: '', // route.params.news_content as string, // 富文本引用，初始值，不改变
     // news_writer_id: route.params.news_writer_id as string,
     news_praise_number: Number(route.params.news_praise_number),
     news_star_number: Number(route.params.news_star_number),
@@ -205,20 +211,25 @@ let editNews: newsNews = reactive({
     news_dps: route.params.news_dps as string
 })
 
-import { useRouter } from 'vue-router'
-import { updateContentAndDps, updateNewsTitle } from '../api/news'
-const router = useRouter()
 const goBack = () => {
     router.back()
 }
-// // 初始化数据
-// const getData = () => {}
+// 初始化数据
+const getData = () => {
+    getNewContentById(editNews.news_id)
+        .then((result) => {
+            // console.log(result)
+            editNews.news_content = result
+        })
+        .catch((err) => {
+            throw err
+        })
+}
 
-// // 挂载完毕
-// import { onMounted } from 'vue'
-// onMounted(() => {
-//     getData()
-// })
+// 挂载完毕
+onMounted(() => {
+    getData()
+})
 
 // /**
 //  * @description el-card body 基本信息 CSS样式
@@ -231,16 +242,6 @@ const goBack = () => {
 // }
 </script>
 <style scoped>
-.bg {
-    background-image: url('@/assets/bg4.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-
-    height: 100%;
-    width: 100%;
-    position: fixed;
-}
-
 /* 自定义布局 */
 /* .InfoFlex {
     margin: 20px auto;

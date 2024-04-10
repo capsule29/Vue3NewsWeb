@@ -12,4 +12,4 @@ interface NewUser extends User {
     // 判断是修改还是添加的标志 false修改，true添加
     flag: boolean
 }
-export { type User, type NewUser }
+export type { User, NewUser }

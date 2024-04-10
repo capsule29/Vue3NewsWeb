@@ -1,10 +1,7 @@
 <template>
     <el-card style="margin-top: 20px">
         <el-table :data="tableData" style="width: 100%" border stripe height="481" size="default">
-            <!-- 卡片头部 -->
-            <template #header>
-                <div class="card-header" style="text-align: center">新闻列表</div>
-            </template>
+            <!-- 表格内容 -->
             <el-table-column
                 v-for="(item, index) in news_col"
                 :key="index"
@@ -22,14 +19,14 @@
                         {{ scope.row.news_title }}
                     </div>
                 </template>
-                <template v-else-if="item.idx == 3" #default="scope">
+                <!-- <template v-else-if="item.idx == 3" #default="scope">
                     <el-text class="w-150px mb-2" truncated>
                         {{ scope.row.news_content }}
                     </el-text>
-                </template>
+                </template> -->
                 <template v-else-if="item.idx == 4" #default="scope">
                     <el-text class="mx-1" size="large">
-                        {{ scope.row.news_writer_id }}
+                        {{ scope.row.news_writer_name }}
                     </el-text>
                 </template>
                 <template v-else-if="item.idx == 5" #default="scope">
@@ -48,59 +45,6 @@
                     </el-text>
                 </template>
             </el-table-column>
-            <!-- <el-table-column
-                prop="news_id"
-                label="新闻ID"
-                width="70"
-                align="center"
-                header-align="center"
-            >
-                <template #default="scope">
-                    {{ scope.row.news_id }}
-                </template>
-            </el-table-column>
-
-            <el-table-column
-                prop="news_title"
-                label="新闻标题"
-                align="center"
-                header-align="center"
-            >
-                <template #default="scope">
-                    {{ scope.row.news_title }}
-                </template>
-            </el-table-column>
-
-            <el-table-column prop="news_content" label="新闻预览">
-                <template #default="scope">
-                    <el-text size="small" truncated line-clamp="1">
-                        {{ scope.row.news_content }}
-                    </el-text>
-                </template>
-            </el-table-column>
-
-            <el-table-column
-                prop="news_praise_number"
-                label="点赞数"
-                width="80"
-                align="center"
-                header-align="center"
-            >
-                <template #default="scope">
-                    {{ scope.row.news_praise_number }}
-                </template>
-            </el-table-column>
-            <el-table-column
-                prop="news_star_number"
-                label="收藏数"
-                width="80"
-                align="center"
-                header-align="center"
-            >
-                <template #default="scope">
-                    {{ scope.row.news_star_number }}
-                </template>
-            </el-table-column> -->
 
             <el-table-column label="操作" width="220" align="center" header-align="center">
                 <template #default="scope">
@@ -132,30 +76,35 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios'
 import { reactive, onMounted } from 'vue'
 import { Edit, DeleteFilled, InfoFilled } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
-import type { NewsWithDate } from '@/api/news/NewsModel.ts'
-import { deleteNews } from '@/api/news/index.ts'
-import { getUserNameById } from '@/api/user/index.ts'
+
+import type { NewsWithDate } from '@/api/news/NewsModel'
+import { deleteNews, getAllNews } from '@/api/news/index'
+
+import type { User } from '@/api/user/UserModel'
+import { getAllUsers, getUserNameById } from '@/api/user/index'
+
 const router = useRouter()
+const emit = defineEmits(['closeLoading', 'openLoading'])
 
 // 新闻表头
 const news_col = [
     { idx: 1, label: '新闻ID' },
     { idx: 2, label: '新闻标题' },
-    { idx: 3, label: '新闻预览' },
-    { idx: 4, label: '作者ID' },
+    // { idx: 3, label: '新闻预览' },
+    { idx: 4, label: '作者名称' },
     { idx: 5, label: '点赞数' },
     { idx: 6, label: '收藏数' },
     { idx: 7, label: '创建时间' }
 ]
+
 type NewsWithDateT = typeof NewsWithDate
+// 新闻表格数据
 let tableData: Array<NewsWithDateT> = reactive([])
-/**
- * 添加新闻新闻
- */
+
+// 添加新闻新闻
 const addRow = () => {
     // tableData.push({
     //     // news_id:'',
@@ -165,61 +114,79 @@ const addRow = () => {
     // })
 }
 
+// 进入新闻修改页面
 const editFnc = (scope: any) => {
-    //  path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_content/:news_praise_number/:news_star_number/:news_created_time/:news_dps',
+    //  path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_praise_number/:news_star_number/:news_created_time/:news_dps',
 
     let news_writer_name = ''
     getUserNameById(scope.row.news_writer_id)
         .then((result) => {
             news_writer_name = result
             // console.log(tableData[scope.$index].news_dps)
-            router.push(
-                `/admin/editor/${scope.row.news_id}/${scope.row.news_title}/${news_writer_name}/${scope.row.news_content}/${scope.row.news_praise_number}/${scope.row.news_star_number}/${scope.row.news_created_time}/${tableData[scope.$index].news_dps}`
-            )
+            // router.push(`/admin/editor`)
+            router.push(`/admin/editor/${scope.row.news_id}/${scope.row.news_title}/${news_writer_name}/${scope.row.news_praise_number}/${scope.row.news_star_number}/${scope.row.news_created_time}/${tableData[scope.$index].news_dps}
+`)
         })
         .catch((err) => {
             throw err
         })
 }
-const emit = defineEmits(['closeLoading', 'openLoading'])
+// 删除数据
+const handleDelete = (index: any, row: any) => {
+    tableData.splice(index, 1)
+    deleteNews(row.news_id)
+}
+
 /**
- * 初始（新闻）数据
+ * @description 初始化新闻数据
  */
 const getData = () => {
     emit('openLoading')
-    let api = '/api/admin/search/news'
-    axios
-        .get(api)
-        .then((solution) => {
-            const data: Array<any> = solution.data
-            tableData.push(...data)
+
+    type UserT = typeof User
+    /**
+     * @description 方便获取作者名数据
+     */
+    const user_list: UserT[] = []
+    getAllUsers()
+        .then((result) => {
+            user_list.push(...result)
         })
         .catch((err) => {
+            ElMessage.error('作者信息获取失败')
+            throw err
+        })
+
+    getAllNews()
+        .then((result) => {
+            tableData.push(...result)
+        })
+        .catch((err) => {
+            ElMessage.error('新闻信息获取失败')
             throw err
         })
         .finally(() => {
-            for (let item in tableData) {
-                const date = new Date(tableData[item].news_created_time as string)
-                tableData[item].DateString =
+            for (let index in tableData) {
+                // 拼接日期字符串
+                const date = new Date(tableData[index].news_created_time as string)
+                tableData[index].DateString =
                     `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
+
+                // 作者id映射到作者名
+                for (let i in user_list) {
+                    if (tableData[index].news_writer_id == user_list[i].user_id) {
+                        tableData[index].news_writer_name = user_list[i].user_name
+                    }
+                }
             }
             emit('closeLoading')
         })
 }
-/**
- * 生命周期创建
- */
+
+// 生命周期创建
 onMounted(() => {
     getData()
 })
-
-/**
- * 删除数据
- */
-const handleDelete = (index: any, row: any) => {
-    tableData.splice(index, 1)
-    deleteNews(row)
-}
 </script>
 
 <style scoped>
