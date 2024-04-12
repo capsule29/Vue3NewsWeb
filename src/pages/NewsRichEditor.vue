@@ -204,13 +204,13 @@ const getData = () => {
         // 不是新增新闻
         // 编辑新闻的参数
         editNews.news_id = Number(route.params.news_id)
-        editNews.news_title = route.params.news_title as string
-        editNews.news_writer_name = route.params.news_writer_name as string
+        editNews.news_title = route.params.news_title
+        editNews.news_writer_name = route.params.news_writer_name
         editNews.news_content = ''
         editNews.news_praise_number = Number(route.params.news_praise_number)
         editNews.news_star_number = Number(route.params.news_star_number)
-        editNews.news_created_time = route.params.news_created_time as string
-        editNews.news_dps = route.params.news_dps as string
+        editNews.news_created_time = route.params.news_created_time
+        editNews.news_dps = route.params.news_dps
         getNewContentById(editNews.news_id)
             .then((result) => {
                 editNews.news_content = result
