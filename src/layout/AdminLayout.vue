@@ -25,10 +25,10 @@
 
 <script setup lang="ts">
 // import { ref } from 'vue'
-import Header from '@/components/HeaderBar.vue'
-import FooterWord from '@/components/FooterWord.vue'
-import AdminMain from '@/views/AdminMain.vue'
-import Menu from '@/views/AdminAside.vue' /*标签页*/
+import Header from '../components/HeaderBar.vue'
+import FooterWord from '../components/FooterWord.vue'
+import AdminMain from '../views/AdminMain.vue'
+import Menu from '../views/AdminAside.vue' /*标签页*/
 </script>
 
 <style scoped>
@@ -38,7 +38,7 @@ import Menu from '@/views/AdminAside.vue' /*标签页*/
 }
 
 .xxc {
-    background: url('@/assets/bg3.png');
+    background: url('../assets/bg3.png');
     min-height: 100vh;
     /* background-position: 100% */
     background-size: cover;
@@ -53,7 +53,7 @@ import Menu from '@/views/AdminAside.vue' /*标签页*/
 }
 
 .bg {
-    background-image: url('@/assets/bg5.png');
+    background-image: url('../assets/bg5.png');
     background-repeat: no-repeat;
     background-size: cover;
 

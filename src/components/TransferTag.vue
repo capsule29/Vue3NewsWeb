@@ -18,8 +18,8 @@ interface Option {
     disabled: boolean
 }
 
-import { getDepartment } from '../api/department'
-import { Department } from '../api/department/DepartmentModel'
+import { getDepartment } from '../api/department/index'
+import type { Department } from '../api/department/DepartmentModel'
 
 const data: Option[] = reactive([]) // 总共的参数
 const value = ref([]) // 不可见部门
@@ -51,7 +51,11 @@ const changeEditedDps = () => {
 // 挂载完毕，初始化
 onMounted(() => {
     // 将"2,3,4,5,6"分割成["2", "3", "4", "5", "6"]
-    let dps_list: string[] = props.news_dps.split(',')
+    let dps_list: string[] = []
+
+    if (props.news_dps != undefined) {
+        dps_list = props.news_dps.split(',')
+    }
     let canTSeeDepartment: number[] = [] // 不能看见该新闻的部门id
     for (let index = 0; index < dps_list.length; index++) {
         const element = dps_list[index]

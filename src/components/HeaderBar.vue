@@ -10,7 +10,11 @@
                 >欢迎您，来自{{ getCookie('department_name') }}的{{ getCookie('user_name') }}
             </el-text>
             <el-button
-                v-if="route.fullPath.includes('/news')"
+                v-if="
+                    !route.fullPath.includes('/admin/news') &&
+                    route.fullPath.includes('/news') &&
+                    getCookie('authority_id') == '1'
+                "
                 style="margin-right: 20px"
                 @click="router.back()"
             >

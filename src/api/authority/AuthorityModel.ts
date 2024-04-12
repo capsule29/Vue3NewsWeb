@@ -3,4 +3,9 @@ type Authority = {
     authority_name?: string
 }
 
-export type { Authority }
+interface NewAuthority extends Authority {
+    edit?: boolean
+    flag?: boolean
+}
+
+export type { Authority, NewAuthority }

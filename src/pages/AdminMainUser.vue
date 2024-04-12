@@ -66,7 +66,7 @@
                         />
                     </el-select>
                     <div v-else>
-                        <!-- 动态获取权限 -->
+                        <!-- 动态获取权限 待优化 -->
                         <div v-for="(item, index) in authority_list" :key="index">
                             <el-tag
                                 v-if="scope.row.authority_id == `${item.authority_id}`"
@@ -117,33 +117,30 @@ import { reactive, onMounted } from 'vue'
 import { Edit, Check, DeleteFilled, InfoFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
-import type { NewUser } from '@/api/user/UserModel'
-import { getNewUser, addUser, deleteUser, updateUser } from '@/api/user/index'
+import type { NewUser } from '../api/user/UserModel'
+import { getNewUser, addUser, deleteUser, updateUser } from '../api/user/index'
 
-import type { Authority } from '@/api/authority/AuthorityModel'
-import { getAuthority } from '@/api/authority/index'
+import type { Authority } from '../api/authority/AuthorityModel'
+import { getAuthority } from '../api/authority/index'
 
-import type { Department } from '@/api/department/DepartmentModel'
-import { getDepartment } from '@/api/department/index'
+import type { Department } from '../api/department/DepartmentModel'
+import { getDepartment } from '../api/department/index'
 
 // 用户表头
 const user_col = [
     { idx: 1, label: '账号ID' },
     { idx: 2, label: '用户名' },
-    { idx: 3, label: '密码（设置后将进行MD5加密）' },
+    { idx: 3, label: '密码（加密）' },
     { idx: 4, label: '所属部门' },
     { idx: 5, label: '账号类型' }
 ]
 
 // 用户数据
-type NewUserT = typeof NewUser
-let tableData: Array<NewUserT> = reactive([])
+let tableData: Array<NewUser> = reactive([])
 // 权限列表
-type AuthorityT = typeof Authority
-let authority_list: Array<AuthorityT> = reactive([])
+let authority_list: Array<Authority> = reactive([])
 // 部门列表
-type DepartmentT = typeof Department
-let department_list: Array<DepartmentT> = reactive([])
+let department_list: Array<Department> = reactive([])
 /**
  * 添加用户空白数据
  */
@@ -233,7 +230,11 @@ const handleSave = (index: any, row: any): Boolean => {
  */
 const handleDelete = (index: any, row: any) => {
     tableData.splice(index, 1)
-    deleteUser(row.user_id)
+    if (row.user_id != null) {
+        deleteUser(row.user_id)
+    } else {
+        ElMessage.success('删除成功')
+    }
 }
 </script>
 

@@ -6,7 +6,7 @@
                 <template #header>
                     <el-link :underline="false" @click.prevent="goBack()" type="primary">
                         <el-icon><ArrowLeftBold /> </el-icon>
-                        返回
+                        返回新闻列表
                     </el-link>
                 </template>
 
@@ -27,16 +27,14 @@
                             <template #header> 基础信息 </template>
                             <div>
                                 <div>
-                                    标题:
+                                    标题：
                                     <br />
                                     <el-input
                                         v-if="title_flag"
                                         v-model="editNews.news_title"
                                         placeholder="请输入标题"
+                                        :onBlur="() => (title_flag = !title_flag)"
                                     >
-                                        <template #append>
-                                            <el-button @click="saveTitle"> 保存 </el-button>
-                                        </template>
                                     </el-input>
 
                                     <el-popover
@@ -61,46 +59,54 @@
                                 </div>
                                 <br />
                                 <div>
-                                    作者:
+                                    作者：
                                     <el-tag type="info" size="large">
                                         {{ editNews.news_writer_name }}
                                     </el-tag>
                                 </div>
                                 <br />
                                 <div>
-                                    点赞数:
+                                    点赞数：
                                     <el-tag type="info" size="large">
                                         {{ editNews.news_praise_number }}
                                     </el-tag>
                                 </div>
                                 <br />
                                 <div>
-                                    收藏数:
+                                    收藏数：
                                     <el-tag type="info" size="large">
                                         {{ editNews.news_star_number }}
                                     </el-tag>
                                 </div>
                                 <br />
                                 <div>
-                                    创建时间:
+                                    创建时间：
                                     <el-tag type="info" size="large">
                                         {{
                                             new Date(
                                                 editNews.news_created_time as string
                                             ).getFullYear()
-                                        }}
-                                        年
-                                        {{
+                                        }}年{{
                                             new Date(
                                                 editNews.news_created_time as string
                                             ).getMonth() + 1
-                                        }}
-                                        月
-                                        {{
-                                            new Date(editNews.news_created_time as string).getDate()
-                                        }}
-                                        日
+                                        }}月{{
+                                            new Date(
+                                                editNews.news_created_time as string
+                                            ).getDate()
+                                        }}日
                                     </el-tag>
+                                </div>
+                                <br />
+                                <div>
+                                    <el-button
+                                        @click.prevent="
+                                            () => {
+                                                router.push(`/admin/comment/${editNews.news_id}`)
+                                            }
+                                        "
+                                        >查看评论</el-button
+                                    >
                                 </div>
                             </div>
                         </el-card>
@@ -114,8 +120,6 @@
                                 @dps="
                                     (edited_dps) => {
                                         editNews.news_dps = edited_dps
-                                        // console.log('父组件，事件')
-                                        // console.log(editNews.news_dps)
                                     }
                                 "
                                 :news_dps="editNews.news_dps"
@@ -127,26 +131,12 @@
                 <!-- 卡片尾 -->
                 <template #footer>
                     <div style="text-align: center">
-                        <el-button
-                            type="success"
-                            size="large"
-                            @click.prevent="
-                                updateNewsContentAndDps(
-                                    editNews.news_id,
-                                    richHtml,
-                                    editNews.news_dps
-                                )
-                            "
-                        >
+                        <el-button type="success" size="large" @click.prevent="updateAllData()">
                             保存
                         </el-button>
                         <el-button type="info" size="large" plain @click.prevent="goBack()">
                             返回
                         </el-button>
-                        <!-- <el-button @click="look(1)"> 查看editorValue内容 </el-button>-->
-                        <!-- <el-button @click="() => console.log(richHtml)">
-                            查看richHtml内容
-                        </el-button> -->
                     </div>
                 </template>
             </el-card>
@@ -157,16 +147,15 @@
 import { onMounted, ref, type Ref, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeftBold } from '@element-plus/icons-vue'
+import { getCookie } from 'typescript-cookie'
 
-import RichEditor from '@/components/RichEditor.vue'
-import TransferTag from '@/components/TransferTag.vue'
-import type { News } from '@/api/news/NewsModel'
-import { getNewContentById, updateNewsContentAndDps, updateNewsTitle } from '@/api/news/index'
+import RichEditor from '../components/RichEditor.vue'
+import TransferTag from '../components/TransferTag.vue'
+import type { NewsWithDateAndWriterName } from '../api/news/NewsModel'
+import { getNewContentById, updateNews } from '../api/news/index'
 
 const route = useRoute()
 const router = useRouter()
-
-// const editorValue = ref('在此输入新闻内容') // 富文本引用，初始值，不改变
 const richHtml = ref() // 富文本内容；改变后的值
 
 /**
@@ -177,84 +166,74 @@ const handleUpdateValue = (val: any) => {
     richHtml.value = val
 }
 
-// const edited_dps: Ref<string> = ref('')
-type NewsTemp = typeof News
-interface newsNews extends NewsTemp {
-    news_writer_name: string
-}
-
+// 标题Tag和Input切换
 let title_flag: Ref<boolean> = ref(false)
 const changeTitleFlag = () => {
     title_flag.value = !title_flag.value
 }
+const goBack = () => {
+    router.back()
+}
 
 /**
- * 保存标题
+ * 更新全部新闻
  */
-const saveTitle = () => {
-    updateNewsTitle(editNews.news_id, editNews.news_title)
-    changeTitleFlag()
+const updateAllData = () => {
+    updateNews(editNews.news_id, editNews.news_title, richHtml.value, editNews.news_dps)
+    goBack()
 }
 
 /**
  * @description 正在修改的新闻
  */
-const editNews: newsNews = reactive({
-    news_id: Number(route.params.news_id),
-    news_title: route.params.news_title as string,
-    news_writer_name: route.params.news_writer_name as string,
-    news_content: '', // route.params.news_content as string, // 富文本引用，初始值，不改变
-    // news_writer_id: route.params.news_writer_id as string,
-    news_praise_number: Number(route.params.news_praise_number),
-    news_star_number: Number(route.params.news_star_number),
-    news_created_time: route.params.news_created_time as string,
-    news_dps: route.params.news_dps as string
+const editNews: NewsWithDateAndWriterName = reactive({
+    // news_id: -1
+    // news_id: Number(route.params.news_id),
+    // news_title: route.params.news_title as string,
+    // news_writer_name: route.params.news_writer_name as string,
+    // news_content: '', // route.params.news_content as string, // 富文本引用，初始值，不改变
+    // // news_writer_id: route.params.news_writer_id as string,
+    // news_praise_number: Number(route.params.news_praise_number),
+    // news_star_number: Number(route.params.news_star_number),
+    // news_created_time: route.params.news_created_time as string,
+    // news_dps: route.params.news_dps as string
 })
 
-const goBack = () => {
-    router.back()
-}
-// 初始化数据
 const getData = () => {
-    getNewContentById(editNews.news_id)
-        .then((result) => {
-            // console.log(result)
-            editNews.news_content = result
-        })
-        .catch((err) => {
-            throw err
-        })
+    if (route.params.news_title != undefined) {
+        // 不是新增新闻
+        // 编辑新闻的参数
+        editNews.news_id = Number(route.params.news_id)
+        editNews.news_title = route.params.news_title as string
+        editNews.news_writer_name = route.params.news_writer_name as string
+        editNews.news_content = ''
+        editNews.news_praise_number = Number(route.params.news_praise_number)
+        editNews.news_star_number = Number(route.params.news_star_number)
+        editNews.news_created_time = route.params.news_created_time as string
+        editNews.news_dps = route.params.news_dps as string
+        getNewContentById(editNews.news_id)
+            .then((result) => {
+                editNews.news_content = result
+            })
+            .catch((err) => {
+                throw err
+            })
+    } else {
+        // 新增的新闻
+        // 编辑新闻的参数
+        editNews.news_id = Number(route.params.news_id)
+        editNews.news_title = '在此输入新闻标题'
+        editNews.news_writer_name = getCookie('user_name')
+        editNews.news_content = ''
+        editNews.news_praise_number = 0
+        editNews.news_star_number = 0
+        editNews.news_created_time = new Date().toString()
+        editNews.news_dps = '-1'
+    }
 }
-
 // 挂载完毕
 onMounted(() => {
     getData()
 })
-
-// /**
-//  * @description el-card body 基本信息 CSS样式
-//  */
-// const baseInfoCSS = {
-//     display: 'flex',
-//     'flex-direction': 'column',
-//     'flex-wrap': 'wrap',
-//     'justify-content': 'space-around'
-// }
 </script>
-<style scoped>
-/* 自定义布局 */
-/* .InfoFlex {
-    margin: 20px auto;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    // justify-content: center;
-    justify-content: space-around;
-} */
-/* .baseInfo {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: space-around;
-} */
-</style>
+<style scoped></style>

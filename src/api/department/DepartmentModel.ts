@@ -3,4 +3,9 @@ type Department = {
     department_name?: string
 }
 
-export type { Department }
+interface NewDepartment extends Department {
+    edit?: boolean
+    flag?: boolean
+}
+
+export type { Department, NewDepartment }

@@ -46,28 +46,28 @@ const getNewUser = async (): Promise<NewUser[]> => {
     return tableData
 }
 
-/**
- * @description 通过用户id得到用户名
- * @param user_id
- * @returns Promise<string>
- */
-const getUserNameById = async (user_id: number): Promise<string> => {
-    const api = '/api/user/get_name_by_id'
-    let data = ''
-    await axios
-        .get(api, {
-            params: {
-                user_id
-            }
-        })
-        .then((solution) => {
-            data = solution.data
-        })
-        .catch((err) => {
-            throw err
-        })
-    return data
-}
+// /**
+//  * @description 通过用户id得到用户名
+//  * @param user_id
+//  * @returns Promise<string>
+//  */
+// const getUserNameById = async (user_id: number): Promise<string> => {
+//     const api = '/api/user/get_name_by_id'
+//     let data = ''
+//     await axios
+//         .get(api, {
+//             params: {
+//                 user_id
+//             }
+//         })
+//         .then((solution) => {
+//             data = solution.data
+//         })
+//         .catch((err) => {
+//             throw err
+//         })
+//     return data
+// }
 
 /**
  * @description 添加用户
@@ -167,4 +167,4 @@ const deleteUser = (user_id: number) => {
         })
 }
 
-export { getAllUsers, getNewUser, getUserNameById, addUser, updateUser, deleteUser }
+export { getAllUsers, getNewUser, /* getUserNameById, */ addUser, updateUser, deleteUser }

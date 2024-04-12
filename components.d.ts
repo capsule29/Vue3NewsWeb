@@ -16,6 +16,7 @@ declare module 'vue' {
     CommentSmall: (typeof import('./src/components/News/CommentSmall.vue'))['default']
     copy: (typeof import('./src/components/richEditor copy.vue'))['default']
     ElAside: typeof import('element-plus/es')['ElAside']
+    ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElButtonGroup: (typeof import('element-plus/es'))['ElButtonGroup']
     ElCard: typeof import('element-plus/es')['ElCard']

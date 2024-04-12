@@ -50,7 +50,7 @@
                 <template #default="scope">
                     <!-- 编辑 -->
                     <el-button @click="editFnc(scope)">
-                        <el-icon> <edit /> </el-icon>内容编辑
+                        <el-icon> <edit /> </el-icon>详细内容
                     </el-button>
                     <el-popconfirm
                         confirm-button-text="确定"
@@ -80,11 +80,8 @@ import { reactive, onMounted } from 'vue'
 import { Edit, DeleteFilled, InfoFilled } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 
-import type { NewsWithDate } from '@/api/news/NewsModel'
-import { deleteNews, getAllNews } from '@/api/news/index'
-
-import type { User } from '@/api/user/UserModel'
-import { getAllUsers, getUserNameById } from '@/api/user/index'
+import type { NewsWithDateAndWriterName } from '../api/news/NewsModel'
+import { addNews, deleteNews, getAllNewsWithNewsWriterName } from '../api/news/index'
 
 const router = useRouter()
 const emit = defineEmits(['closeLoading', 'openLoading'])
@@ -100,36 +97,23 @@ const news_col = [
     { idx: 7, label: '创建时间' }
 ]
 
-type NewsWithDateT = typeof NewsWithDate
 // 新闻表格数据
-let tableData: Array<NewsWithDateT> = reactive([])
+let tableData: Array<NewsWithDateAndWriterName> = reactive([])
 
-// 添加新闻新闻
+// 添加新闻
 const addRow = () => {
-    // tableData.push({
-    //     // news_id:'',
-    //     // news_title:'',
-    //     // news_content
-    //     // edit: false
-    // })
+    // 添加空白新闻
+    addNews().then((result) => {
+        router.push(`/admin/editor/${result}`)
+    })
 }
 
 // 进入新闻修改页面
 const editFnc = (scope: any) => {
     //  path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_praise_number/:news_star_number/:news_created_time/:news_dps',
-
-    let news_writer_name = ''
-    getUserNameById(scope.row.news_writer_id)
-        .then((result) => {
-            news_writer_name = result
-            // console.log(tableData[scope.$index].news_dps)
-            // router.push(`/admin/editor`)
-            router.push(`/admin/editor/${scope.row.news_id}/${scope.row.news_title}/${news_writer_name}/${scope.row.news_praise_number}/${scope.row.news_star_number}/${scope.row.news_created_time}/${tableData[scope.$index].news_dps}
-`)
-        })
-        .catch((err) => {
-            throw err
-        })
+    router.push(
+        `/admin/editor/${scope.row.news_id}/${scope.row.news_title}/${scope.row.news_writer_name}/${scope.row.news_praise_number}/${scope.row.news_star_number}/${scope.row.news_created_time}/${tableData[scope.$index].news_dps}`
+    )
 }
 // 删除数据
 const handleDelete = (index: any, row: any) => {
@@ -143,43 +127,23 @@ const handleDelete = (index: any, row: any) => {
 const getData = () => {
     emit('openLoading')
 
-    type UserT = typeof User
-
-    // 方便获取作者名数据
-    const user_list: UserT[] = []
-    getAllUsers()
+    // 得到所有的新闻数据
+    getAllNewsWithNewsWriterName()
         .then((result) => {
-            user_list.push(...result)
-
-            // 得到所有的新闻数据
-            getAllNews()
-                .then((result) => {
-                    tableData.push(...result)
-                })
-                .catch((err) => {
-                    ElMessage.error('新闻信息获取失败')
-                    throw err
-                })
-                .finally(() => {
-                    for (let index in tableData) {
-                        // 拼接日期字符串
-                        const date = new Date(tableData[index].news_created_time as string)
-                        tableData[index].DateString =
-                            `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
-
-                        // 作者id映射到作者名
-                        for (let i in user_list) {
-                            if (tableData[index].news_writer_id == user_list[i].user_id) {
-                                tableData[index].news_writer_name = user_list[i].user_name
-                            }
-                        }
-                    }
-                    emit('closeLoading')
-                })
+            tableData.push(...result)
         })
         .catch((err) => {
-            ElMessage.error('作者信息获取失败')
+            ElMessage.error('新闻信息获取失败')
             throw err
+        })
+        .finally(() => {
+            for (let index in tableData) {
+                // 拼接日期字符串
+                const date = new Date(tableData[index].news_created_time as string)
+                tableData[index].DateString =
+                    `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
+            }
+            emit('closeLoading')
         })
 }
 

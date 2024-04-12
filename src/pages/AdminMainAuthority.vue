@@ -63,8 +63,8 @@ import { reactive, onMounted } from 'vue'
 import { Edit, Check, DeleteFilled, InfoFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
-import { getAuthority, addAuthority, deleteAuthority, updateAuthority } from '@/api/authority'
-import type { Authority } from '@/api/authority/AuthorityModel'
+import { getAuthority, addAuthority, deleteAuthority, updateAuthority } from '../api/authority'
+import type { NewAuthority } from '../api/authority/AuthorityModel'
 
 // 权限表头
 const authority_col = [
@@ -73,8 +73,7 @@ const authority_col = [
 ]
 
 // 权限列表
-type AuthorityT = typeof Authority
-let tableData: Array<AuthorityT> = reactive([])
+let tableData: Array<NewAuthority> = reactive([])
 /**
  * 添加权限空白数据
  */
@@ -124,7 +123,7 @@ const checkEmpty = (row: any) => {
 /**
  * 保存信息
  */
-const handleSave = (index: any, row: any): Boolean => {
+const handleSave = (index: any, row: NewAuthority): Boolean => {
     if (checkEmpty(row)) {
         ElMessage.warning('保存前请完善信息！')
         return false
@@ -133,10 +132,10 @@ const handleSave = (index: any, row: any): Boolean => {
     tableData[index] = row
     if (row.flag) {
         // 添加的
-        addAuthority(row)
+        addAuthority(row.authority_name)
     } else {
         // 修改的
-        updateAuthority(row)
+        updateAuthority(Number(row.authority_id), row.authority_name)
     }
 
     return true
@@ -144,9 +143,9 @@ const handleSave = (index: any, row: any): Boolean => {
 /**
  * 删除数据
  */
-const handleDelete = (index: any, row: any) => {
+const handleDelete = (index: any, row: NewAuthority) => {
     tableData.splice(index, 1)
-    deleteAuthority(row)
+    deleteAuthority(Number(row.authority_id))
 }
 </script>
 

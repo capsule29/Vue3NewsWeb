@@ -13,12 +13,13 @@
             <FooterWord />
         </el-footer>
     </el-container>
+    <el-backtop :right="1400" :bottom="50" />
 </template>
 
 <script setup lang="ts">
-import Header from '@/components/HeaderBar.vue'
-import FooterWord from '@/components/FooterWord.vue'
-import Main from '@/views/NewsMain.vue'
+import Header from '../components/HeaderBar.vue'
+import FooterWord from '../components/FooterWord.vue'
+import Main from '../views/NewsMain.vue'
 </script>
 
 <style scoped>
@@ -33,7 +34,7 @@ import Main from '@/views/NewsMain.vue'
     width: 100%;
     position: fixed;
     z-index: 1;
-    background-image: url('@/assets/bg4.png');
+    background-image: url('../assets/bg4.png');
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -45,7 +46,7 @@ import Main from '@/views/NewsMain.vue'
 
 .el-main {
     margin: 0px auto;
-    /*滚动条隐藏 */
+    /*滚动条隐藏 */     
     overflow: visible;
 }
 </style>

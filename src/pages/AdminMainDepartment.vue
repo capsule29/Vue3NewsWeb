@@ -63,13 +63,13 @@ import { reactive, onMounted } from 'vue'
 import { Edit, Check, DeleteFilled, InfoFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
-import type { Department } from '@/api/department/DepartmentModel'
+import type { NewDepartment } from '../api/department/DepartmentModel'
 import {
     getDepartment,
     addDepartment,
     deleteDepartment,
     updateDepartment
-} from '@/api/department/index'
+} from '../api/department/index'
 
 // 部门表头
 const department_col = [
@@ -79,9 +79,7 @@ const department_col = [
 
 // 部门列表
 
-type DepartmentT = typeof Department
-let tableData: Array<DepartmentT> = reactive([])
-// let department_list: Array<DepartmentT> = reactive([])
+let tableData: Array<NewDepartment> = reactive([])
 /**
  * 添加部门空白数据
  */
@@ -131,7 +129,7 @@ const checkEmpty = (row: any) => {
 /**
  * 保存信息
  */
-const handleSave = (index: any, row: any): Boolean => {
+const handleSave = (index: any, row: NewDepartment): Boolean => {
     if (checkEmpty(row)) {
         ElMessage.warning('保存前请完善信息！')
         return false
@@ -151,9 +149,13 @@ const handleSave = (index: any, row: any): Boolean => {
 /**
  * 删除数据
  */
-const handleDelete = (index: any, row: any) => {
+const handleDelete = (index: any, row: NewDepartment) => {
     tableData.splice(index, 1)
-    deleteDepartment(row.department_id)
+    if (row.department_id != null) {
+        deleteDepartment(row.department_id)
+    } else {
+        ElMessage.success('删除成功')
+    }
 }
 </script>
 

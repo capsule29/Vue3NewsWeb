@@ -24,57 +24,72 @@
         <el-link type="primary" :underline="false">
             <div class="more">查看更多</div>
         </el-link>
-
-        <div style="margin-top: 20px">
+        <br />
+        <br />
+        <el-row justify="start">
             <!-- 记录开关状态 cookie session 服务端 -->
             <!-- 赞开关 -->
-            <el-button
-                plain
-                type="primary"
-                @click="
-                    $emit('addReduce', !is_praise, index, 'praise', news.news_id),
-                        (is_praise = !is_praise)
-                "
-            >
-                <el-icon class="el-icon--left"> <ArrowUpBold /> </el-icon>
-                <span v-if="is_praise">已</span>赞 {{ news.news_praise_number }}
-            </el-button>
+            <el-col :span="6">
+                <el-button
+                    style="min-width: 120px"
+                    plain
+                    type="primary"
+                    @click="
+                        $emit('addReduce', !is_praise, index, 'praise', news.news_id),
+                            (is_praise = !is_praise)
+                    "
+                >
+                    <!-- <el-row> -->
+                    <!-- <el-col :span="11"> -->
+                    <el-icon class="el-icon--left"> <ArrowUpBold /> </el-icon>
+                    <!-- </el-col> -->
+                    <!-- <el-col :span="2"> -->
+                    <span v-if="is_praise">已</span>点赞 {{ news.news_praise_number }}
+                    <!-- </el-col> -->
+                    <!-- </el-row> -->
+                </el-button>
+            </el-col>
             <!-- 收藏开关 -->
-            <el-button
-                plain
-                type="primary"
-                @click="
-                    $emit('addReduce', !is_star, index, 'star', news.news_id), (is_star = !is_star)
-                "
-            >
-                <el-icon class="el-icon--left">
-                    <StarFilled v-if="is_star" /> <Star v-else />
-                </el-icon>
-                <span v-if="is_star">已</span>收藏 {{ news.news_star_number }}
-            </el-button>
-
+            <el-col :span="6">
+                <el-button
+                    style="min-width: 120px"
+                    plain
+                    type="primary"
+                    @click="
+                        $emit('addReduce', !is_star, index, 'star', news.news_id),
+                            (is_star = !is_star)
+                    "
+                >
+                    <el-icon class="el-icon--left">
+                        <StarFilled v-if="is_star" /> <Star v-else />
+                    </el-icon>
+                    <span v-if="is_star">已</span>收藏 {{ news.news_star_number }}
+                </el-button>
+            </el-col>
             <!-- 打开小评论区 -->
-            <el-button
-                :icon="ChatLineSquare"
-                text
-                @click="$emit('openComment', index), changeCommentString"
-            >
-                {{ is_open_str }}
-            </el-button>
-        </div>
+            <el-col :span="12">
+                <el-button
+                    :icon="ChatLineSquare"
+                    text
+                    @click="$emit('openComment', index), (is_open = !is_open)"
+                >
+                    <span v-if="is_open">折叠评论</span>
+                    <span v-else>展开评论</span>
+                </el-button>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
 <script setup lang="ts">
 /* ====================导入==================== */
-import { onBeforeUpdate, ref, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { ArrowUpBold, Star, StarFilled, ChatLineSquare } from '@element-plus/icons-vue'
-import { News } from '@/api/news/NewsModel'
-type NewsT = typeof News
+import type { News } from '../api/news/NewsModel'
 /* ====================NewsMain组件传参==================== */
 const props = defineProps<{
     index: number
-    news: NewsT
+    news: News
     is_open_comment_status: boolean
 }>()
 /* ====================变量==================== */
@@ -83,22 +98,9 @@ let is_star: Ref<boolean> = ref(false)
 // 该新闻是否被用户点赞
 let is_praise: Ref<boolean> = ref(false)
 // 评论是否展开
-let is_open_str: Ref<string> = ref('展开评论')
+let is_open: Ref<boolean> = ref(false)
 
 const news_created_time = new Date(props.news.news_created_time)
-/* ====================函数==================== */
-/**
- * 改变按钮值
- */
-const changeCommentString = () => {
-    if (props.is_open_comment_status) is_open_str.value = '折叠评论'
-    else is_open_str.value = '展开评论'
-}
-/* ====================生命周期==================== */
-onBeforeUpdate(() => {
-    changeCommentString()
-    // document.getElementById('content').innerHTML = props.news_content
-})
 </script>
 
 <style scoped>

@@ -11,8 +11,8 @@
 
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue'
-import { Authority } from '../api/authority/AuthorityModel'
-import { getAuthority } from '@/api/authority/index'
+import type { Authority } from '../api/authority/AuthorityModel'
+import { getAuthority } from '../api/authority/index'
 
 const props = defineProps<{
     ruleForm: Authority

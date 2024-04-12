@@ -69,14 +69,13 @@
 <script setup lang="ts">
 //#region 导入
 import { ref, reactive } from 'vue'
-import { getCookie, setCookie } from 'typescript-cookie'
+import { getCookie } from 'typescript-cookie'
 import { useRouter } from 'vue-router'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 
-import { login } from '@/api/login/index'
-import { getDepartmentNameById } from '@/api/department/index'
+import { login } from '../api/login/index'
 const router = useRouter()
 //#endregion
 
@@ -128,27 +127,26 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             // 验证成功登录
             login(ruleForm.user_name, ruleForm.password, ruleForm.authority_id as number).then(
                 () => {
-                    // 得到部门名称数据
-                    getDepartmentNameById(getCookie('department_id')).then((result) => {
-                        // console.log(result[0].department_name)
-                        setCookie('department_name', result[0].department_name)
+                    // 得到部门名称数据(已用连接查询优化)
+                    // getDepartmentNameById(Number(getCookie('department_id'))).then((result) => {
+                    //     setCookie('department_name', result[0].department_name)
 
-                        // vue router 跳转，replace不留历史记录
-                        if (getCookie('authority_id') == '1') {
-                            // 管理员
-                            router.push({ path: '/admin', replace: true })
-                        } else if (getCookie('authority_id') == '2') {
-                            // 编辑
-                            router.push({ path: '/news', replace: true })
-                        } else if (getCookie('authority_id') == '3') {
-                            // 用户
-                            router.push({ path: '/news', replace: true })
-                        } else {
-                            // 其他
-                            router.push({ path: '/news', replace: true })
-                        }
-                        ElMessage.success('登陆成功')
-                    })
+                    // vue router 跳转，replace不留历史记录
+                    if (getCookie('authority_id') == '1') {
+                        // 管理员
+                        router.push({ path: '/admin', replace: true })
+                    } else if (getCookie('authority_id') == '2') {
+                        // 编辑
+                        router.push({ path: '/news', replace: true })
+                    } else if (getCookie('authority_id') == '3') {
+                        // 用户
+                        router.push({ path: '/news', replace: true })
+                    } else {
+                        // 其他
+                        router.push({ path: '/news', replace: true })
+                    }
+                    ElMessage.success('登陆成功')
+                    // })
                 }
             )
         } else {
@@ -183,7 +181,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 .big-background {
     width: 100%;
     height: 100vh;
-    background: url('@/assets/bg4.png') no-repeat;
+    background: url('../assets/bg4.png') no-repeat;
     background-size: contain;
 }
 

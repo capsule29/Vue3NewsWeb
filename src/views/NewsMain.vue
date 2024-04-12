@@ -7,21 +7,24 @@
                     <!-- 无限滚动新闻卡片 -->
                     <ul v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
                         <li :key="index" v-for="(item, index) in news_data_list">
-                            <NewsCard
-                                v-if="index <= count"
-                                :news="item"
-                                :index="index"
-                                :is_open_comment_status="item.is_open_comment_status"
-                                @addReduce="addRudeuceFunc"
-                                @openComment="openComment"
-                            />
-                            <!-- 小评论区 -->
-                            <NewsCommentView
-                                v-if="item.is_open_comment_status"
-                                :news_id="item.news_id"
-                            />
-                            <!-- 分割线 -->
-                            <el-divider v-show="index <= count" />
+                            <el-card shadow="never">
+                                <NewsCard
+                                    v-if="index <= count"
+                                    :news="item"
+                                    :index="index"
+                                    :is_open_comment_status="item.is_open_comment_status"
+                                    @addReduce="addRudeuceFunc"
+                                    @openComment="openComment"
+                                />
+                                <!-- 小评论区 -->
+                                <NewsCommentView
+                                    v-if="item.is_open_comment_status"
+                                    :news_id="item.news_id"
+                                />
+                                <!-- 分割线 -->
+                            </el-card>
+                            <!-- <el-divider v-show="index <= count" /> -->
+                            <br />
                         </li>
                     </ul>
                     <!-- 无限滚动提示 -->
@@ -51,25 +54,17 @@
 <script setup lang="ts">
 /* ====================导入==================== */
 import { ref, reactive, onMounted, computed } from 'vue'
-import NewsCard from '@/components/NewsCard.vue'
-import NewsAside from '@/views/NewsAside.vue'
-import NewsCommentView from '@/components/NewsComment.vue'
 import { ElMessage } from 'element-plus'
 import { getCookie } from 'typescript-cookie'
-import { addReduce, getNewsCanSee } from '@/api/news/index'
-import type { News } from '@/api/news/NewsModel'
-/* ====================接口==================== */
-type NewsT = typeof News
-interface newsDataInterface extends NewsT {
-    // [propName: string]: any
-    // 非接口参数
-    is_open_comment_status: boolean
-}
 
+import NewsAside from '../views/NewsAside.vue'
+import NewsCard from '../components/NewsCard.vue'
+import NewsCommentView from '../components/NewsComment.vue'
+import { addReduce, getNewsCanSee } from '../api/news/index'
+import type { OpenCommentStatusNews } from '../api/news/NewsModel'
 /* ====================数据==================== */
-let news_data_list: Array<newsDataInterface> = reactive([])
+let news_data_list: Array<OpenCommentStatusNews> = reactive([])
 /* ====================函数==================== */
-
 /**
  * 点赞or收藏加1or-1
  * @param is_add

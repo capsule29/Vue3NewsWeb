@@ -1,13 +1,14 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import type { News } from './NewsModel'
+import type { NewsWithNewsWriterName, OpenCommentStatusNews } from './NewsModel'
+import { getCookie } from 'typescript-cookie'
 
 /**
- * @description 得到所有新闻信息
+ * @description 得到所有新闻信息以及作者用户名
  * @returns Promise<News[]>
  */
-const getAllNews = async (): Promise<News[]> => {
-    const data: News[] = []
+const getAllNewsWithNewsWriterName = async (): Promise<NewsWithNewsWriterName[]> => {
+    const data: NewsWithNewsWriterName[] = []
     await axios
         .get('/api/news/select/all')
         .then((solution) => {
@@ -24,8 +25,8 @@ const getAllNews = async (): Promise<News[]> => {
  * @param department_id
  * @returns Promise<News[]>
  */
-const getNewsCanSee = async (department_id: number): Promise<News[]> => {
-    const data: News[] = []
+const getNewsCanSee = async (department_id: number): Promise<OpenCommentStatusNews[]> => {
+    const data: OpenCommentStatusNews[] = []
     await axios
         .get('/api/news/select/byUser', {
             params: {
@@ -62,63 +63,33 @@ const deleteNews = (news_id: number) => {
 }
 
 /**
- * 更新新闻标题
- * @param news_id
- * @param news_title
- */
-const updateNewsTitle = (news_id: number, news_title: string) => {
-    axios
-        .get('/api/news/update/title', {
-            params: {
-                news_id,
-                news_title
-            }
-        })
-        .then(() => {
-            ElMessage.success('更新成功')
-        })
-        .catch((err) => {
-            ElMessage.error('更新失败')
-            throw err
-        })
-}
-
-/**
  * 更新新闻内容以及部门能见度
  * @param news_id
+ * @param news_title
  * @param news_content
  * @param news_dps
  */
-const updateNewsContentAndDps = (news_id: number, news_content: string, news_dps: string) => {
-    const api1 = '/api/news/update/content'
+const updateNews = (
+    news_id: number,
+    news_title: string,
+    news_content: string,
+    news_dps: string
+) => {
+    const api1 = '/api/news/update/'
     axios
         .get(api1, {
             params: {
                 news_id,
-                news_content
+                news_content,
+                news_dps,
+                news_title
             }
         })
-        .then((/* result */) => {
-            ElMessage.success('内容修改成功')
+        .then(() => {
+            ElMessage.success('新闻更新成功')
         })
         .catch((err) => {
-            ElMessage.error('内容修改失败')
-            throw err
-        })
-
-    const api2 = '/api/news/update/dps'
-    axios
-        .get(api2, {
-            params: {
-                news_id,
-                news_dps
-            }
-        })
-        .then((/* result */) => {
-            ElMessage.success('部门权限修改成功')
-        })
-        .catch((err) => {
-            ElMessage.error('部门权限修改失败')
+            ElMessage.error('新闻更新失败')
             throw err
         })
 }
@@ -130,21 +101,58 @@ const updateNewsContentAndDps = (news_id: number, news_content: string, news_dps
  */
 const getNewContentById = async (news_id: number): Promise<string> => {
     let data: string = ''
-    const api = '/api/news/select/content'
+    const api = '/api/news/select/content/byId'
     await axios
         .get(api, {
             params: {
-                news_id: news_id
+                news_id
             }
         })
         .then((solution) => {
             data = solution.data
-            // ElMessage.success('删除成功')
+            // ElMessage.success('获取新闻内容成功')
         })
-        .catch(() => {
-            // ElMessage.error('删除失败')
+        .catch((err) => {
+            ElMessage.error('获取新闻内容失败')
+            throw err
         })
     return data
+}
+
+const addNews = async (): Promise<number> => {
+    const news_writer_id: number = Number(getCookie('user_id'))
+    let news_id = -1
+    await axios
+        .get('/api/news/add', {
+            params: {
+                news_writer_id
+            }
+        })
+        .then(async () => {
+            ElMessage.success('创建成功')
+            await getLatestNewsId().then((result) => {
+                news_id = result
+            })
+        })
+        .catch((err) => {
+            ElMessage.error('创建失败')
+            throw err
+        })
+    return news_id
+}
+
+const getLatestNewsId = async (): Promise<number> => {
+    let news_id = -1
+    await axios
+        .get('/api/news/getLatestNewsId')
+        .then((result) => {
+            news_id = result.data[0].news_id
+        })
+        .catch((err) => {
+            ElMessage.error('获取最新新闻ID失败')
+            throw err
+        })
+    return news_id
 }
 
 /**
@@ -169,11 +177,12 @@ const addReduce = (is_add: boolean, what: string, news_id: number) => {
 }
 
 export {
-    getAllNews,
+    getAllNewsWithNewsWriterName,
     getNewsCanSee,
     deleteNews,
-    updateNewsTitle,
-    updateNewsContentAndDps,
+    updateNews,
     getNewContentById,
+    addNews,
+    getLatestNewsId,
     addReduce
 }
