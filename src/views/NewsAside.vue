@@ -1,23 +1,26 @@
 <!-- 浏览新闻主体——热点新闻 -->
 <template>
-    <el-text class="w-150px mb-2" truncated line-clamp="4">
-        {{ title }}
+    <el-card shadow="hover" style="margin-bottom: 10px">
+        <template #header>{{ `焦点新闻Top${index + 1}` }}</template>
+
+        {{ store.news.news_title }}
         <br />
-        {{ content }}
-    </el-text>
+        <el-text size="small" line-clamp="2">
+            <span v-html="store.news.news_content"></span>
+        </el-text>
+    </el-card>
 </template>
 
 <script setup lang="ts">
-// import { ref, reactive } from 'vue'
+import { onMounted } from 'vue'
+
+import { useNewsAsideStore } from '../store'
+const store = useNewsAsideStore()
+
 defineProps<{
-    title: string
-    content: string
+    index: number
 }>()
+onMounted(() => {})
 </script>
 
-<style scoped>
-div {
-    width: 300px;
-    height: 300px;
-}
-</style>
+<style scoped></style>

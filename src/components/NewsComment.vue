@@ -33,6 +33,8 @@
                         :comment="item"
                         :index="index"
                         @deleteCommentData="commentData.splice(index, 1)"
+                        @praise="() => (commentData[index].comment_praise_number += 1)"
+                        @depraise="() => (commentData[index].comment_praise_number -= 1)"
                     />
                     <el-divider v-if="index != commentData.length - 1" />
                 </div>
@@ -64,22 +66,7 @@ onMounted(() => {
     // 通过新闻ID获取评论数据以及评论的用户名
     getCommentByNewsId(props.news_id)
         .then((result) => {
-            // console.log('测试')
-            // console.log(result)
             commentData.push(...result)
-
-            // // 给每条评论的user_id映射到用户名
-            // for (let index = 0; index < commentData.length; index++) {
-            //     // const element = commentData[index];
-            //     getUserNameById(commentData[index].user_id)
-            //         .then((result) => {
-            //             commentData[index].user_name = result
-            //         })
-            //         .catch((err) => {
-            //             ElMessage.error('用户名映射失败')
-            //             throw err
-            //         })
-            // }
         })
         .catch((err) => {
             ElMessage.error('评论获取失败')

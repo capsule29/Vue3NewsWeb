@@ -38,7 +38,7 @@
             </el-menu-item>
         </router-link> -->
 
-        <router-link to="/news">
+        <router-link to="/news/all">
             <el-menu-item index="4">
                 <el-icon><Monitor /></el-icon>
                 <span>浏览新闻网</span>

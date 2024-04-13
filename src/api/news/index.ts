@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import type { NewsWithNewsWriterName, OpenCommentStatusNews } from './NewsModel'
+import type { News, NewsWithNewsWriterName, OpenCommentStatusNews } from './NewsModel'
 import { getCookie } from 'typescript-cookie'
 
 /**
@@ -110,7 +110,6 @@ const getNewContentById = async (news_id: number): Promise<string> => {
         })
         .then((solution) => {
             data = solution.data
-            // ElMessage.success('获取新闻内容成功')
         })
         .catch((err) => {
             ElMessage.error('获取新闻内容失败')
@@ -155,23 +154,80 @@ const getLatestNewsId = async (): Promise<number> => {
     return news_id
 }
 
-/**
- * @description 点赞收藏
- * @param is_add
- * @param what
- * @param news_id
- */
-const addReduce = (is_add: boolean, what: string, news_id: number) => {
-    const api: string = '/api/news/addreduce'
-    axios
-        .get(api, {
+// src\views\NewsDetail.vue
+const getNewsById = async (news_id: number): Promise<News> => {
+    let news_data: News = {}
+    await axios
+        .get('/api/news/select/all/byId', {
             params: {
-                what,
-                news_id,
-                is_add
+                news_id
             }
         })
+        .then((result) => {
+            news_data = result.data
+        })
+        .catch(() => {})
+    return news_data
+}
+
+/*====================================点赞收藏新闻====================================*/
+const praiseNews = (news_id: number) => {
+    axios
+        .get('/api/news/praise', {
+            params: {
+                news_id
+            }
+        })
+        .then(() => {
+            ElMessage.success('点赞成功')
+        })
         .catch((err) => {
+            ElMessage.error('点赞失败')
+            throw err
+        })
+}
+const depraiseNews = (news_id: number) => {
+    axios
+        .get('/api/news/depraise', {
+            params: {
+                news_id
+            }
+        })
+        .then(() => {
+            ElMessage.success('取消点赞成功')
+        })
+        .catch((err) => {
+            ElMessage.error('取消点赞失败')
+            throw err
+        })
+}
+const starNews = (news_id: number) => {
+    axios
+        .get('/api/news/star', {
+            params: {
+                news_id
+            }
+        })
+        .then(() => {
+            ElMessage.success('收藏成功')
+        })
+        .catch((err) => {
+            ElMessage.error('收藏失败')
+            throw err
+        })
+}
+const destarNews = (news_id: number) => {
+    axios
+        .get('/api/news/depraise', {
+            params: {
+                news_id
+            }
+        })
+        .then(() => {
+            ElMessage.success('取消收藏成功')
+        })
+        .catch((err) => {
+            ElMessage.error('取消收藏失败')
             throw err
         })
 }
@@ -184,5 +240,9 @@ export {
     getNewContentById,
     addNews,
     getLatestNewsId,
-    addReduce
+    getNewsById,
+    praiseNews,
+    depraiseNews,
+    starNews,
+    destarNews
 }

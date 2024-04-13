@@ -1,7 +1,7 @@
 <!-- 评论卡片 -->
 <template>
     <div style="margin-left: 10px">
-        {{ props.comment.user_name }} 说：
+        {{ props.comment.user_name }}：
         <br />
         <br />
 
@@ -9,13 +9,25 @@
         <br />
         <br />
         <el-row justify="start" align="middle">
-            <el-col :span="6">
+            <el-col :span="7">
                 <el-text type="info">
                     评论于
-                    {{ comment_created_time.getFullYear() }}年{{
-                        comment_created_time.getMonth() + 1
-                    }}月{{ comment_created_time.getDate() }}日
+                    {{ comment_created_time.getFullYear() }}
+                    年
+                    {{ comment_created_time.getMonth() + 1 }}
+                    月
+                    {{ comment_created_time.getDate() }}
+                    日
                 </el-text>
+            </el-col>
+            <el-col :span="4">
+                <el-link :underline="false" @click.prevent="clickPraise()">
+                    <el-icon><ArrowUp /></el-icon>
+                    <el-text typs="info">
+                        <span v-if="is_praise">已</span>点赞
+                        {{ props.comment.comment_praise_number }}
+                    </el-text>
+                </el-link>
             </el-col>
             <el-col :span="2">
                 <el-popconfirm
@@ -31,13 +43,11 @@
                     v-if="showDelete()"
                 >
                     <template #reference>
-                        <!-- <div style="width: 10px; position: relative; left: 690px"> -->
-                        <el-row align="middle">
-                            <el-button text>
-                                <el-icon> <Delete /> </el-icon><el-text type="info">删除</el-text>
-                            </el-button>
-                        </el-row>
-                        <!-- </div> -->
+                        <!-- <el-button text> -->
+                        <el-link :underline="false">
+                            <el-icon> <Delete /> </el-icon><el-text type="info">删除</el-text>
+                        </el-link>
+                        <!-- </el-button> -->
                     </template>
                 </el-popconfirm>
             </el-col>
@@ -46,10 +56,11 @@
 </template>
 
 <script setup lang="ts">
-import { Delete } from '@element-plus/icons-vue'
+import { ref, type Ref } from 'vue'
+import { Delete, ArrowUp } from '@element-plus/icons-vue'
 import { getCookie } from 'typescript-cookie'
 
-import { deleteComment } from '../api/comment/index'
+import { deleteComment, depraiseComment, praiseComment } from '../api/comment/index'
 import type { MyComment } from '../api/comment/CommentModel'
 
 const props = defineProps<{
@@ -57,19 +68,30 @@ const props = defineProps<{
     index: number
 }>()
 
-const emit = defineEmits(['deleteCommentData'])
+const comment_created_time = new Date(props.comment.comment_created_time)
+let is_praise: Ref<boolean> = ref(false)
+
+const emit = defineEmits(['praise', 'depraise', 'deleteCommentData'])
+
+const clickPraise = () => {
+    if (!is_praise.value) {
+        // 当前是没点赞
+        praiseComment(props.comment.comment_id)
+        emit('praise')
+    } else {
+        depraiseComment(props.comment.comment_id)
+        emit('depraise')
+    }
+    is_praise.value = !is_praise.value
+}
 /**
  * 判断是否满足删除评论的条件
  */
 const showDelete = (): boolean => {
-    // console.log(props.comment.user_id)
-    // console.log(getCookie('authority_id'))
     return (
         getCookie('user_id') == props.comment.user_id.toString() || getCookie('authority_id') == '1'
     )
 }
-
-const comment_created_time = new Date(props.comment.comment_created_time)
 </script>
 
 <style scoped></style>

@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, ref, defineEmits } from 'vue'
+import { reactive, ref, defineEmits, onBeforeMount } from 'vue'
 
 interface Option {
     key: number
@@ -49,18 +49,21 @@ const changeEditedDps = () => {
 }
 
 // 挂载完毕，初始化
-onMounted(() => {
+onBeforeMount(() => {
     // 将"2,3,4,5,6"分割成["2", "3", "4", "5", "6"]
     let dps_list: string[] = []
-
+    // console.log(props.news_dps)
     if (props.news_dps != undefined) {
         dps_list = props.news_dps.split(',')
     }
+    // console.log(dps_list)
+
     let canTSeeDepartment: number[] = [] // 不能看见该新闻的部门id
     for (let index = 0; index < dps_list.length; index++) {
         const element = dps_list[index]
         canTSeeDepartment.push(Number(element))
     }
+
     // console.log(canTSeeDepartment) // [4, 5, 6]
 
     getDepartment()
@@ -70,15 +73,19 @@ onMounted(() => {
                 const element: Department = result[index]
                 // 存入初始部门数据
                 data.push({
-                    key: index + 1, //和部门id对应
+                    // key: index + 1, //和部门id对应
+                    key: element.department_id, //和部门id对应
                     label: element.department_name,
                     disabled: index === 0 // 管理员必须可见
                 })
                 // 放入右侧不可见部门列表
+                // console.log(element.department_id)
+
                 if (canTSeeDepartment.indexOf(element.department_id) != -1) {
                     value.value.push(element.department_id)
                 }
             }
+            // console.log(value)
         })
         .catch((err) => {
             throw err

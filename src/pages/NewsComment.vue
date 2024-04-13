@@ -93,10 +93,10 @@ const comment_col = [
     { idx: 5, label: '点赞数' }
 ]
 
+const emit = defineEmits(['closeLoading', 'openLoading'])
 // 数据
 let tableData: Array<MyComment> = reactive([])
 
-const emit = defineEmits(['closeLoading', 'openLoading'])
 // 数据初始化
 const getData = () => {
     emit('openLoading')

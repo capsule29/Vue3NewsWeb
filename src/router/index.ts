@@ -7,7 +7,18 @@ const routes = [
     },
     {
         path: '/news',
-        component: () => import('../layout/NewsLayout.vue')
+        component: () => import('../layout/NewsLayout.vue'),
+        redirect: '/admin/all',
+        children: [
+            {
+                path: '/news/all',
+                component: () => import('../pages/NewsMain.vue')
+            },
+            {
+                path: '/news/detail',
+                component: () => import('../views/NewsDetail.vue')
+            }
+        ]
     },
     {
         path: '/admin',

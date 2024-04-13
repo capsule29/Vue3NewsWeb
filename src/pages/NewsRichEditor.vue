@@ -144,14 +144,14 @@
     </el-row>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, type Ref, reactive } from 'vue'
+import {  ref, type Ref, reactive, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeftBold } from '@element-plus/icons-vue'
 import { getCookie } from 'typescript-cookie'
 
 import RichEditor from '../components/RichEditor.vue'
 import TransferTag from '../components/TransferTag.vue'
-import type { NewsWithDateAndWriterName } from '../api/news/NewsModel'
+import type {  NewsWithDateAndWriterName } from '../api/news/NewsModel'
 import { getNewContentById, updateNews } from '../api/news/index'
 
 const route = useRoute()
@@ -204,13 +204,13 @@ const getData = () => {
         // 不是新增新闻
         // 编辑新闻的参数
         editNews.news_id = Number(route.params.news_id)
-        editNews.news_title = route.params.news_title
-        editNews.news_writer_name = route.params.news_writer_name
+        editNews.news_title = route.params.news_title as string
+        editNews.news_writer_name = route.params.news_writer_name as string
         editNews.news_content = ''
         editNews.news_praise_number = Number(route.params.news_praise_number)
         editNews.news_star_number = Number(route.params.news_star_number)
-        editNews.news_created_time = route.params.news_created_time
-        editNews.news_dps = route.params.news_dps
+        editNews.news_created_time = route.params.news_created_time as string
+        editNews.news_dps = route.params.news_dps as string
         getNewContentById(editNews.news_id)
             .then((result) => {
                 editNews.news_content = result
@@ -232,7 +232,7 @@ const getData = () => {
     }
 }
 // 挂载完毕
-onMounted(() => {
+onBeforeMount(() => {
     getData()
 })
 </script>

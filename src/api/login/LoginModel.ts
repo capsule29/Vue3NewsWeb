@@ -7,7 +7,7 @@ export class LoginParams {
         this.password = CryptoJS.MD5(CryptoJS.MD5(password)).toString()
         this.authority_id = authority_id
     }
-    user_name: string
-    password: string
-    authority_id: number
+    user_name?: string
+    password?: string
+    authority_id?: number
 }

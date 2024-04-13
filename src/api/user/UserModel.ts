@@ -8,8 +8,8 @@ interface User {
 
 interface NewUser extends User {
     // 是否是修改状态
-    edit: boolean
+    edit?: boolean
     // 判断是修改还是添加的标志 false修改，true添加
-    flag: boolean
+    flag?: boolean
 }
 export type { User, NewUser }

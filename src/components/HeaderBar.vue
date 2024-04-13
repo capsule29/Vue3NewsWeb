@@ -16,7 +16,7 @@
                     getCookie('authority_id') == '1'
                 "
                 style="margin-right: 20px"
-                @click="router.back()"
+                @click="router.push('/admin')"
             >
                 返回控制台
             </el-button>

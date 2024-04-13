@@ -72,4 +72,36 @@ const deleteComment = (comment_id: number): void => {
         })
 }
 
-export { getCommentByNewsId, addComment, deleteComment }
+// 评论点赞数+1
+const praiseComment = (comment_id: number): void => {
+    axios
+        .get('/api/comment/praise', {
+            params: {
+                comment_id
+            }
+        })
+        .then(() => {
+            ElMessage.success('评论点赞成功')
+        })
+        .catch((err) => {
+            ElMessage.error('评论点赞失败')
+            throw err
+        })
+}
+// 评论点赞数-1
+const depraiseComment = (comment_id: number): void => {
+    axios
+        .get('/api/comment/depraise', {
+            params: {
+                comment_id
+            }
+        })
+        .then(() => {
+            ElMessage.success('评论取消点赞成功')
+        })
+        .catch((err) => {
+            ElMessage.error('评论取消点赞失败')
+            throw err
+        })
+}
+export { getCommentByNewsId, addComment, deleteComment, praiseComment, depraiseComment }
