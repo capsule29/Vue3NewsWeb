@@ -1,87 +1,131 @@
 <!-- 新闻卡片 -->
 <template>
-    <div class="card">
-        <div class="title">
-            <a href=""> {{ props.news.news_title }}</a>
-            <br />
-            <div style="margin-left: 5px">
-                <el-text type="info">
-                    发布于
-                    {{ news_created_time.getFullYear() }}年{{
-                        news_created_time.getMonth() + 1
-                    }}月{{ news_created_time.getDate() }}日
-                </el-text>
+    <el-card shadow="never">
+        <div style="margin-left: 5px">
+            <div class="title">
+                <a v-if="flag == true" size="large" @click.prevent="emit('click')">
+                    {{ props.news.news_title }}
+                </a>
+                <span v-else> {{ news_data.news_title }}</span>
+                <br />
+                <div style="margin-left: 5px">
+                    <el-text type="info">
+                        {{ news_data.news_writer_name }}
+                        发布于
+                        {{ dateStr }}
+                    </el-text>
+                </div>
             </div>
-        </div>
-        <br />
-        <div style="margin-left: 10px">
-            <el-link type="primary" :underline="false">
-                <el-text type="" size="large" line-clamp="6" style="">
-                    <div v-html="props.news.news_content"></div>
-                </el-text>
-            </el-link>
             <br />
-            <el-link type="primary" :underline="false">
-                <div class="more">查看更多</div>
-            </el-link>
-        </div>
-        <br />
-        <el-row justify="start">
-            <!-- 记录开关状态 cookie session 服务端 -->
-            <!-- 赞开关 -->
-            <el-col :span="5">
-                <el-button style="min-width: 120px" plain type="primary" @click="clickPraise()">
-                    <el-icon class="el-icon--left"> <ArrowUpBold /> </el-icon>
-                    <span v-if="is_praise">已</span>点赞 {{ props.news.news_praise_number }}
-                </el-button>
-            </el-col>
-            <!-- 收藏开关 -->
-            <el-col :span="5">
-                <el-button style="min-width: 120px" plain type="primary" @click="clickStar()">
-                    <el-icon class="el-icon--left">
-                        <StarFilled v-if="is_star" /> <Star v-else />
-                    </el-icon>
-                    <span v-if="is_star">已</span>收藏 {{ props.news.news_star_number }}
-                </el-button>
-            </el-col>
-            <!-- 打开小评论区 -->
-            <el-col :span="5">
-                <el-button
-                    :icon="ChatLineSquare"
-                    text
-                    @click="emit('openComment', index), (is_open = !is_open)"
+            <div style="margin-left: 10px">
+                <el-link
+                    @click.prevent="emit('click')"
+                    v-if="flag == true"
+                    type="primary"
+                    :underline="false"
                 >
-                    <span v-if="is_open">折叠</span>
-                    <span v-else>展开</span>评论
-                </el-button>
-            </el-col>
-        </el-row>
-    </div>
+                    <el-text size="large" line-clamp="6">
+                        <div v-html="news_data.news_content"></div>
+                    </el-text>
+                </el-link>
+                <el-text v-else size="large">
+                    <div v-html="news_data.news_content"></div>
+                </el-text>
+                <br />
+
+                <el-link
+                    @click.prevent="emit('click')"
+                    v-if="flag == true"
+                    type="primary"
+                    :underline="false"
+                >
+                    <div class="more">查看更多</div>
+                </el-link>
+            </div>
+            <br />
+            <div style="width: 650px">
+                <el-row justify="start">
+                    <!-- 记录开关状态 cookie session 服务端 -->
+                    <!-- 赞开关 -->
+                    <el-col :span="5">
+                        <el-button
+                            style="min-width: 120px"
+                            plain
+                            type="primary"
+                            @click="clickPraise()"
+                        >
+                            <el-icon class="el-icon--left"> <ArrowUpBold /> </el-icon>
+                            <span v-if="is_praise">已</span>点赞
+                            {{ news_data.news_praise_number }}
+                        </el-button>
+                    </el-col>
+                    <!-- 收藏开关 -->
+                    <el-col :span="5">
+                        <el-button
+                            style="min-width: 120px"
+                            plain
+                            type="primary"
+                            @click="clickStar()"
+                        >
+                            <el-icon class="el-icon--left">
+                                <StarFilled v-if="is_star" /> <Star v-else />
+                            </el-icon>
+                            <span v-if="is_star">已</span>收藏 {{ news_data.news_star_number }}
+                        </el-button>
+                    </el-col>
+                    <!-- 打开小评论区 -->
+                    <el-col :span="5" v-if="flag == true">
+                        <el-button
+                            :icon="ChatLineSquare"
+                            text
+                            @click="is_open_comment_status = !is_open_comment_status"
+                        >
+                            <span v-if="is_open_comment_status">折叠</span>
+                            <span v-else>展开</span>评论
+                        </el-button>
+                    </el-col>
+                </el-row>
+            </div>
+            <!-- 评论区 -->
+            <NewsCommentView v-if="is_open_comment_status" :news_id="news_data.news_id" />
+        </div>
+    </el-card>
 </template>
 
 <script setup lang="ts">
 /* ====================导入==================== */
-import { onBeforeMount, onMounted, ref, type Ref } from 'vue'
+import { onBeforeMount, reactive, ref, type Ref } from 'vue'
 import { ArrowUpBold, Star, StarFilled, ChatLineSquare } from '@element-plus/icons-vue'
-import type { News } from '../api/news/NewsModel'
+
+import { useNewsStore } from '../store'
+const NewsStore = useNewsStore()
+
+import NewsCommentView from '../components/NewsComment.vue'
 import { depraiseNews, destarNews, praiseNews, starNews } from '../api/news'
+import { News } from '../api/news/NewsModel'
+import { storeToRefs } from 'pinia'
 /* ====================NewsMain组件传参==================== */
 const props = defineProps<{
-    index: number
     news: News
-    is_open_comment_status: boolean
+    /**
+     * @description 判断是在/news/all 还是 /news/detail
+     *                          true            false
+     */
+    flag: boolean
 }>()
-const emit = defineEmits(['openComment', 'praise', 'depraise', 'star', 'destar'])
-/* ====================变量==================== */
+let is_open_comment_status: Ref<boolean> = ref(props.flag == false ? true : false)
+
+const emit = defineEmits(['click', 'praise', 'depraise', 'star', 'destar'])
+//#region 点赞收藏
 const clickPraise = () => {
     if (!is_praise.value) {
         // 未点赞 -> 已点赞
         emit('praise')
-        praiseNews(props.news.news_id)
+        praiseNews(news_data.news_id)
     } else {
         //  已点赞 -> 未点赞
         emit('depraise')
-        depraiseNews(props.news.news_id)
+        depraiseNews(news_data.news_id)
     }
     is_praise.value = !is_praise.value
 }
@@ -89,37 +133,39 @@ const clickStar = () => {
     if (!is_star.value) {
         // 未收藏 -> 已收藏
         emit('star')
-        starNews(props.news.news_id)
+        starNews(news_data.news_id)
     } else {
         //  已收藏 -> 未收藏
         emit('destar')
-        destarNews(props.news.news_id)
+        destarNews(news_data.news_id)
     }
     is_star.value = !is_star.value
 }
+//#endregion
+
 // 该新闻是否被用户收藏
 let is_star: Ref<boolean> = ref(false)
 // 该新闻是否被用户点赞
 let is_praise: Ref<boolean> = ref(false)
-// 评论是否展开
-let is_open: Ref<boolean> = ref(false)
 
-const news_created_time = new Date(props.news.news_created_time)
+let news_data: News = reactive({} as News)
+let dateStr: Ref<string> = ref('')
 
-onMounted(() => {})
+onBeforeMount(() => {
+    if (props.flag == true) {
+        news_data = props.news
+    } else {
+        news_data = NewsStore.getNews() // storeToRefs(NewsStore)
+    }
+    const date = new Date(news_data.news_created_time)
+    dateStr.value = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
+})
 </script>
 
 <style scoped>
-.card {
-    /* max-width: 560px; */
-    min-height: 150px;
-    width: 650px;
-}
-
 .title {
     font-size: larger;
     color: black;
-    /* width: 100%; */
 }
 
 .title > a:visited {
@@ -132,7 +178,6 @@ onMounted(() => {})
 
 .more {
     left: 500px;
-    /* margin-bottom: 20px; */
 }
 
 .radius {

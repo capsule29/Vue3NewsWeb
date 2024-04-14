@@ -6,7 +6,6 @@
         :titles="['可见部门', '不可见部门']"
         @change="changeEditedDps"
     />
-    <!-- <button @click="() => console.log(edited_dps)">debug</button> -->
 </template>
 
 <script lang="ts" setup>
@@ -43,8 +42,6 @@ const changeEditedDps = () => {
             }
         })
     }
-    // console.log('子组件')
-    // console.log(edited_dps)
     emit('dps', edited_dps)
 }
 
@@ -56,15 +53,12 @@ onBeforeMount(() => {
     if (props.news_dps != undefined) {
         dps_list = props.news_dps.split(',')
     }
-    // console.log(dps_list)
 
     let canTSeeDepartment: number[] = [] // 不能看见该新闻的部门id
     for (let index = 0; index < dps_list.length; index++) {
         const element = dps_list[index]
-        canTSeeDepartment.push(Number(element))
+        canTSeeDepartment.push(Number(element)) // [4, 5, 6]
     }
-
-    // console.log(canTSeeDepartment) // [4, 5, 6]
 
     getDepartment()
         .then((result) => {
@@ -79,13 +73,11 @@ onBeforeMount(() => {
                     disabled: index === 0 // 管理员必须可见
                 })
                 // 放入右侧不可见部门列表
-                // console.log(element.department_id)
 
                 if (canTSeeDepartment.indexOf(element.department_id) != -1) {
                     value.value.push(element.department_id)
                 }
             }
-            // console.log(value)
         })
         .catch((err) => {
             throw err

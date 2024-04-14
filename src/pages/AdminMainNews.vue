@@ -41,7 +41,7 @@
                 </template>
                 <template v-else-if="item.idx == 7" #default="scope">
                     <el-text class="mx-1" size="large">
-                        {{ scope.row.DateString }}
+                        {{ scope.row.date_string }}
                     </el-text>
                 </template>
             </el-table-column>
@@ -80,8 +80,8 @@ import { reactive, onMounted } from 'vue'
 import { Edit, DeleteFilled, InfoFilled } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 
-import type { NewsWithDateAndWriterName } from '../api/news/NewsModel'
-import { addNews, deleteNews, getAllNewsWithNewsWriterName } from '../api/news/index'
+import type { News } from '../api/news/NewsModel'
+import { addNews, deleteNews, getAllNews } from '../api/news/index'
 
 const router = useRouter()
 const emit = defineEmits(['closeLoading', 'openLoading'])
@@ -98,7 +98,7 @@ const news_col = [
 ]
 
 // 新闻表格数据
-let tableData: Array<NewsWithDateAndWriterName> = reactive([])
+let tableData: News[] = reactive([])
 
 // 添加新闻
 const addRow = () => {
@@ -128,7 +128,7 @@ const getData = () => {
     emit('openLoading')
 
     // 得到所有的新闻数据
-    getAllNewsWithNewsWriterName()
+    getAllNews()
         .then((result) => {
             tableData.push(...result)
         })
@@ -140,7 +140,7 @@ const getData = () => {
             for (let index in tableData) {
                 // 拼接日期字符串
                 const date = new Date(tableData[index].news_created_time as string)
-                tableData[index].DateString =
+                tableData[index].date_string =
                     `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
             }
             emit('closeLoading')

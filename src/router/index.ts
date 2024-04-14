@@ -8,7 +8,7 @@ const routes = [
     {
         path: '/news',
         component: () => import('../layout/NewsLayout.vue'),
-        redirect: '/admin/all',
+        redirect: '/news/all',
         children: [
             {
                 path: '/news/all',

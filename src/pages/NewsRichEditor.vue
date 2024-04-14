@@ -144,15 +144,15 @@
     </el-row>
 </template>
 <script lang="ts" setup>
-import {  ref, type Ref, reactive, onBeforeMount } from 'vue'
+import { ref, type Ref, reactive, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeftBold } from '@element-plus/icons-vue'
 import { getCookie } from 'typescript-cookie'
 
 import RichEditor from '../components/RichEditor.vue'
 import TransferTag from '../components/TransferTag.vue'
-import type {  NewsWithDateAndWriterName } from '../api/news/NewsModel'
-import { getNewContentById, updateNews } from '../api/news/index'
+import type { News } from '../api/news/NewsModel'
+import { getNewsById, updateNews } from '../api/news/index'
 
 const route = useRoute()
 const router = useRouter()
@@ -186,7 +186,7 @@ const updateAllData = () => {
 /**
  * @description 正在修改的新闻
  */
-const editNews: NewsWithDateAndWriterName = reactive({
+const editNews: News = reactive({
     // news_id: -1
     // news_id: Number(route.params.news_id),
     // news_title: route.params.news_title as string,
@@ -197,7 +197,7 @@ const editNews: NewsWithDateAndWriterName = reactive({
     // news_star_number: Number(route.params.news_star_number),
     // news_created_time: route.params.news_created_time as string,
     // news_dps: route.params.news_dps as string
-})
+} as News)
 
 const getData = () => {
     if (route.params.news_title != undefined) {
@@ -211,9 +211,9 @@ const getData = () => {
         editNews.news_star_number = Number(route.params.news_star_number)
         editNews.news_created_time = route.params.news_created_time as string
         editNews.news_dps = route.params.news_dps as string
-        getNewContentById(editNews.news_id)
+        getNewsById(editNews.news_id)
             .then((result) => {
-                editNews.news_content = result
+                editNews.news_content = result.news_content
             })
             .catch((err) => {
                 throw err

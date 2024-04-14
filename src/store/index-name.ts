@@ -1,4 +1,5 @@
 export const enum Names {
-    NEWSASIDE = 'NewsAsideData',
+    NEWLIST = 'NewsList',
+    NEWS = 'News',
     TEST = 'Test'
 }

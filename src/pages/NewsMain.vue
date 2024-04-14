@@ -5,29 +5,17 @@
             <el-card>
                 <!-- 无限滚动新闻卡片 -->
                 <ul v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
-                    <li :key="index" v-for="(item, index) in news_data_list">
-                        <el-card shadow="never">
-                            <div style="margin-left: 5px">
-                                <NewsCard
-                                    v-if="index <= count"
-                                    :news="item"
-                                    :index="index"
-                                    :is_open_comment_status="item.is_open_comment_status"
-                                    @star="() => (news_data_list[index].news_star_number += 1)"
-                                    @destar="() => (news_data_list[index].news_star_number -= 1)"
-                                    @praise="() => (news_data_list[index].news_praise_number += 1)"
-                                    @depraise="
-                                        () => (news_data_list[index].news_praise_number -= 1)
-                                    "
-                                    @openComment="openComment"
-                                />
-                                <!-- 小评论区 -->
-                                <NewsCommentView
-                                    v-if="item.is_open_comment_status"
-                                    :news_id="item.news_id"
-                                />
-                            </div>
-                        </el-card>
+                    <li :key="index" v-for="(item, index) in news_list">
+                        <NewsCard
+                            @click="newsDetail(item)"
+                            :flag="true"
+                            :news="item"
+                            v-if="index <= count"
+                            @star="() => (news_list[index].news_star_number += 1)"
+                            @destar="() => (news_list[index].news_star_number -= 1)"
+                            @praise="() => (news_list[index].news_praise_number += 1)"
+                            @depraise="() => (news_list[index].news_praise_number -= 1)"
+                        />
                         <br />
                     </li>
                 </ul>
@@ -45,8 +33,9 @@
                 <NewsAside
                     :key="index"
                     v-for="(item, index) in newsAsides"
+                    :news="item"
                     :index="index"
-                    @click.prevent="newsDetil(item)"
+                    @click.prevent="newsDetail(item)"
                 />
             </div>
         </el-col>
@@ -59,25 +48,18 @@ import { ref, reactive, computed, onBeforeMount } from 'vue'
 import { getCookie } from 'typescript-cookie'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-import { useNewsAsideStore } from '../store'
-const Store = useNewsAsideStore()
+import { useNewsStore, useNewsListStore } from '../store'
+const NewsStore = useNewsStore()
+const NewsListStore = useNewsListStore()
 
 import NewsAside from '../views/NewsAside.vue'
 import NewsCard from '../components/NewsCard.vue'
-import NewsCommentView from '../components/NewsComment.vue'
 import { getNewsCanSee } from '../api/news/index'
-import type { News, OpenCommentStatusNews } from '../api/news/NewsModel'
+import type { News } from '../api/news/NewsModel'
+import { storeToRefs } from 'pinia'
 
-const news_data_list: Array<OpenCommentStatusNews> = reactive([])
+const news_data_list: Array<News> = reactive([])
 //#endregion
-
-/**
- * 打开评论区
- * @param index
- */
-const openComment = (index: number): void => {
-    news_data_list[index].is_open_comment_status = !news_data_list[index].is_open_comment_status
-}
 
 //#region 无限滚动
 const count = ref(5)
@@ -94,37 +76,33 @@ const load = () => {
 //#endregion
 
 //#region 侧边栏新闻
-const newsDetil = (news: News) => {
-    Store.setNews(news)
+const newsDetail = (news: News) => {
+    NewsStore.setNews(news)
     router.push(`/news/detail`)
 }
 //#endregion
 
 let newsAsides: News[] = reactive([])
 
+const news_list: News[] = reactive([])
+
 //#region 初始化
 const getData = () => {
     const department_id: number = Number(getCookie('department_id'))
-    getNewsCanSee(department_id)
-        .then((result) => {
-            const news_data_listTemp = []
-            news_data_listTemp.push(...result)
-            news_data_list.push(...news_data_listTemp)
-            for (let i = 0; i < news_data_list.length; i++) {
-                news_data_list[i].is_open_comment_status = false
-            }
-            news_data_listTemp.sort((a, b) => {
-                // 从大到小
-                return b.news_praise_number - a.news_praise_number
-            })
-            for (let index = 0; index < news_data_listTemp.length && index < 3; index++) {
-                const element = news_data_listTemp[index]
-                newsAsides.push(element)
-            }
+    getNewsCanSee(department_id).then((result) => {
+        NewsListStore.setNewsList(result)
+        news_list.push(...NewsListStore.getNewsList())
+        const news_data_listTemp = []
+        news_data_listTemp.push(...result)
+        news_data_listTemp.sort((a, b) => {
+            // 从大到小
+            return b.news_praise_number - a.news_praise_number
         })
-        .catch((err) => {
-            throw err
-        })
+        for (let index = 0; index < news_data_listTemp.length && index < 3; index++) {
+            const element = news_data_listTemp[index]
+            newsAsides.push(element)
+        }
+    })
 }
 
 onBeforeMount(() => {

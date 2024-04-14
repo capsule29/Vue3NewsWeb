@@ -1,29 +1,26 @@
 <template>
     <el-row justify="center">
-        <el-col :span="23">
-            <el-card>
-                <template #header>
-                    <span v-if="news">
-                        {{ store.news.news_title }}
-                    </span>
-                </template>
-                <el-text type="" size="large" line-clamp="6" style="">
-                    <div v-html="store.news.news_content"></div>
-                </el-text>
-            </el-card>
+        <el-col :span="20">
+            <NewsCard
+                :flag="false"
+                :news="NewsStore.getNews()"
+                @star="() => NewsStore.changeStar(1)"
+                @destar="() => NewsStore.changeStar(-1)"
+                @praise="() => NewsStore.changePraise(1)"
+                @depraise="() => NewsStore.changePraise(-1)"
+            >
+            </NewsCard>
         </el-col>
     </el-row>
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
+import { onMounted } from 'vue'
 
-import { useNewsAsideStore } from '../store'
-const store = useNewsAsideStore()
+import { useNewsStore } from '../store'
+const NewsStore = useNewsStore()
 
-import { News } from '../api/news/NewsModel'
-
-let news: News = reactive({})
+import NewsCard from '../components/NewsCard.vue'
 
 onMounted(() => {
     // getNewsById(Number(route.params.news_id))

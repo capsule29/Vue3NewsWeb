@@ -8,50 +8,52 @@
         {{ props.comment.comment_content }}
         <br />
         <br />
-        <el-row justify="start" align="middle">
-            <el-col :span="7">
-                <el-text type="info">
-                    评论于
-                    {{ comment_created_time.getFullYear() }}
-                    年
-                    {{ comment_created_time.getMonth() + 1 }}
-                    月
-                    {{ comment_created_time.getDate() }}
-                    日
-                </el-text>
-            </el-col>
-            <el-col :span="4">
-                <el-link :underline="false" @click.prevent="clickPraise()">
-                    <el-icon><ArrowUp /></el-icon>
-                    <el-text typs="info">
-                        <span v-if="is_praise">已</span>点赞
-                        {{ props.comment.comment_praise_number }}
+        <div style="width: 600px">
+            <el-row align="middle">
+                <el-col :span="7">
+                    <el-text type="info">
+                        评论于
+                        {{ comment_created_time.getFullYear() }}
+                        年
+                        {{ comment_created_time.getMonth() + 1 }}
+                        月
+                        {{ comment_created_time.getDate() }}
+                        日
                     </el-text>
-                </el-link>
-            </el-col>
-            <el-col :span="2">
-                <el-popconfirm
-                    width="220"
-                    confirm-button-text="删除"
-                    cancel-button-text="取消"
-                    icon-color="#626AEF"
-                    title="确定要删除该评论吗？"
-                    @confirm="
-                        deleteComment(props.comment.comment_id),
-                            emit('deleteCommentData', props.index)
-                    "
-                    v-if="showDelete()"
-                >
-                    <template #reference>
-                        <!-- <el-button text> -->
-                        <el-link :underline="false">
-                            <el-icon> <Delete /> </el-icon><el-text type="info">删除</el-text>
-                        </el-link>
-                        <!-- </el-button> -->
-                    </template>
-                </el-popconfirm>
-            </el-col>
-        </el-row>
+                </el-col>
+                <el-col :span="4">
+                    <el-link :underline="false" @click.prevent="clickPraise()">
+                        <el-icon><ArrowUp /></el-icon>
+                        <el-text typs="info">
+                            <span v-if="is_praise">已</span>点赞
+                            {{ props.comment.comment_praise_number }}
+                        </el-text>
+                    </el-link>
+                </el-col>
+                <el-col :span="2">
+                    <el-popconfirm
+                        width="220"
+                        confirm-button-text="删除"
+                        cancel-button-text="取消"
+                        icon-color="#626AEF"
+                        title="确定要删除该评论吗？"
+                        @confirm="
+                            deleteComment(props.comment.comment_id),
+                                emit('deleteCommentData', props.index)
+                        "
+                        v-if="showDelete()"
+                    >
+                        <template #reference>
+                            <!-- <el-button text> -->
+                            <el-link :underline="false">
+                                <el-icon> <Delete /> </el-icon><el-text type="info">删除</el-text>
+                            </el-link>
+                            <!-- </el-button> -->
+                        </template>
+                    </el-popconfirm>
+                </el-col>
+            </el-row>
+        </div>
     </div>
 </template>
 
