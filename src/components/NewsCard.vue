@@ -103,7 +103,6 @@ const NewsStore = useNewsStore()
 import NewsCommentView from '../components/NewsComment.vue'
 import { depraiseNews, destarNews, praiseNews, starNews } from '../api/news'
 import { News } from '../api/news/NewsModel'
-import { storeToRefs } from 'pinia'
 /* ====================NewsMain组件传参==================== */
 const props = defineProps<{
     news: News

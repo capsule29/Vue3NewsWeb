@@ -22,7 +22,7 @@
                 <!-- 无限滚动提示 -->
                 <div style="text-align: center">
                     <p v-show="loading" v-loading="true"></p>
-                    <p v-show="noMore">都被你看光了</p>
+                    <p v-show="noMore">新闻被你看光了</p>
                 </div>
             </el-card>
         </el-col>
@@ -56,15 +56,13 @@ import NewsAside from '../views/NewsAside.vue'
 import NewsCard from '../components/NewsCard.vue'
 import { getNewsCanSee } from '../api/news/index'
 import type { News } from '../api/news/NewsModel'
-import { storeToRefs } from 'pinia'
 
-const news_data_list: Array<News> = reactive([])
 //#endregion
 
 //#region 无限滚动
 const count = ref(5)
 const loading = ref(false)
-const noMore = computed(() => count.value >= news_data_list.length)
+const noMore = computed(() => count.value >= news_list.length)
 const disabled = computed(() => loading.value || noMore.value)
 const load = () => {
     loading.value = true
@@ -83,13 +81,14 @@ const newsDetail = (news: News) => {
 //#endregion
 
 let newsAsides: News[] = reactive([])
-
 const news_list: News[] = reactive([])
 
 //#region 初始化
 const getData = () => {
     const department_id: number = Number(getCookie('department_id'))
     getNewsCanSee(department_id).then((result) => {
+        console.log(result)
+
         NewsListStore.setNewsList(result)
         news_list.push(...NewsListStore.getNewsList())
         const news_data_listTemp = []
