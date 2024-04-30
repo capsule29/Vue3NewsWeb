@@ -87,7 +87,7 @@ const news_list: News[] = reactive([])
 const getData = () => {
     const department_id: number = Number(getCookie('department_id'))
     getNewsCanSee(department_id).then((result) => {
-        console.log(result)
+        // console.log(result)
 
         NewsListStore.setNewsList(result)
         news_list.push(...NewsListStore.getNewsList())

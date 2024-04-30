@@ -24,7 +24,6 @@
 </template>
 
 <script setup lang="ts">
-// import { ref } from 'vue'
 import Header from '../components/HeaderBar.vue'
 import FooterWord from '../components/FooterWord.vue'
 import CommandMain from '../views/CommandMain.vue'

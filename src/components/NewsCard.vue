@@ -50,12 +50,12 @@
                     <el-col :span="5">
                         <el-button
                             style="min-width: 120px"
-                            plain
+                            :plain="!is_praise"
                             type="primary"
                             @click="clickPraise()"
                         >
                             <el-icon class="el-icon--left"> <ArrowUpBold /> </el-icon>
-                            <span v-if="is_praise">已</span>点赞
+                            <span v-if="is_praise">取消</span>点赞
                             {{ news_data.news_praise_number }}
                         </el-button>
                     </el-col>
@@ -63,14 +63,14 @@
                     <el-col :span="5">
                         <el-button
                             style="min-width: 120px"
-                            plain
+                            :plain="!is_star"
                             type="primary"
                             @click="clickStar()"
                         >
                             <el-icon class="el-icon--left">
                                 <StarFilled v-if="is_star" /> <Star v-else />
                             </el-icon>
-                            <span v-if="is_star">已</span>收藏 {{ news_data.news_star_number }}
+                            <span v-if="is_star">取消</span>收藏 {{ news_data.news_star_number }}
                         </el-button>
                     </el-col>
                     <!-- 打开小评论区 -->

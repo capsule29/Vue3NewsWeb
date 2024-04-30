@@ -10,14 +10,23 @@
                 >欢迎您，来自{{ getCookie('department_name') }}的{{ getCookie('user_name') }}
             </el-text>
             <el-button
+                v-if="getCookie('authority_id') == '2'"
+                style="margin-right: 20px"
+                @click.prevent="$router.push('/editor')"
+            >
+                <!-- 编辑 -->
+                我的编辑台
+            </el-button>
+            <el-button
                 v-if="
-                    !route.fullPath.includes('/admin/news') &&
-                    route.fullPath.includes('/news') &&
-                    getCookie('authority_id') == '1'
+                    getCookie('authority_id') == '1' &&
+                    !route.fullPath.includes('/admin') &&
+                    route.fullPath.includes('/news')
                 "
                 style="margin-right: 20px"
                 @click="router.push('/admin')"
             >
+                <!-- 管理员 -->
                 返回控制台
             </el-button>
             <el-button style="margin-right: 50px" @click="exitLogin"> 退出登录 </el-button>

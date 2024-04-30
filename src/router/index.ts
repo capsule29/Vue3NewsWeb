@@ -41,6 +41,11 @@ const routes = [
                 path: '/admin/editor/:news_id',
                 component: () => import('../pages/NewsRichEditor.vue')
             },
+
+            {
+                path: '/admin/editor/news',
+                component: () => import('../pages/EditorMainNews.vue')
+            },
             {
                 path: '/admin/comment/:news_id',
                 component: () => import('../pages/NewsComment.vue')
@@ -49,15 +54,25 @@ const routes = [
                 path: '/admin/department',
                 component: () => import('../pages/AdminMainDepartment.vue')
             }
-
-            // {
-            //     path: '/admin/authority',
-            //     component: () => import('../pages/AdminMainAuthority.vue')
-            // }
-            // {
-            //     path: '/admin/comment',
-            //     component: () => import('../pages/AdminMainNews.vue')
-            // }
+        ]
+    },
+    {
+        path: '/editor',
+        component: () => import('../layout/EditorLayout.vue'),
+        redirect: '/editor/news',
+        children: [
+            {
+                path: '/editor/news',
+                component: () => import('../pages/EditorMainNews.vue')
+            },
+            {
+                path: '/editor/news/editor/:news_id/:news_title/:news_writer_name/:news_praise_number/:news_star_number/:news_created_time/:news_dps',
+                component: () => import('../pages/NewsRichEditor.vue')
+            },
+            {
+                path: '/editor/news/editor/:news_id',
+                component: () => import('../pages/NewsRichEditor.vue')
+            }
         ]
     }
 ]

@@ -129,6 +129,27 @@ const getAllNews = async (): Promise<News[]> => {
 }
 
 /**
+ * @description 得到所有新闻信息以及作者用户名  SELECT news.*,user.user_name as news_writer_name
+ * @returns Promise<News[]>
+ */
+const getAllNewsByEditor = async (): Promise<News[]> => {
+    const data: News[] = []
+    await axios
+        .get('/api/news/select/byEditor', {
+            params: {
+                writer_id: getCookie('user_id')
+            }
+        })
+        .then((solution) => {
+            data.push(...solution.data)
+        })
+        .catch((err) => {
+            throw err
+        })
+    return data
+}
+
+/**
  * @description 得到该部门id能看到的新闻    SELECT news.*,user.user_name as news_writer_name
  * @param department_id
  * @returns Promise<News[]>
@@ -234,6 +255,7 @@ const destarNews = (news_id: number) => {
 
 export {
     getAllNews,
+    getAllNewsByEditor,
     getNewsCanSee,
     deleteNews,
     updateNews,
