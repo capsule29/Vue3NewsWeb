@@ -74,6 +74,7 @@ import { useRouter } from 'vue-router'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
+// import SelectAuthority from '../components/SelecyAuthoryty.vue'
 
 import { login } from '../api/login/index'
 const router = useRouter()

@@ -24,22 +24,22 @@
                         {{ scope.row.news_content }}
                     </el-text>
                 </template> -->
-                <template v-else-if="item.idx == 4" #default="scope">
+                <template v-else-if="item.idx == 3" #default="scope">
                     <el-text class="mx-1" size="large">
                         {{ scope.row.news_writer_name }}
                     </el-text>
                 </template>
-                <template v-else-if="item.idx == 5" #default="scope">
+                <template v-else-if="item.idx == 4" #default="scope">
                     <el-text class="mx-1" size="large">
                         {{ scope.row.news_praise_number }}
                     </el-text>
                 </template>
-                <template v-else-if="item.idx == 6" #default="scope">
+                <template v-else-if="item.idx == 5" #default="scope">
                     <el-text class="mx-1" size="large">
                         {{ scope.row.news_star_number }}
                     </el-text>
                 </template>
-                <template v-else-if="item.idx == 7" #default="scope">
+                <template v-else-if="item.idx == 6" #default="scope">
                     <el-text class="mx-1" size="large">
                         {{ scope.row.date_string }}
                     </el-text>
@@ -78,23 +78,23 @@
 <script setup lang="ts">
 import { reactive, onMounted } from 'vue'
 import { Edit, DeleteFilled, InfoFilled } from '@element-plus/icons-vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 import type { News } from '../api/news/NewsModel'
-import { addNews, deleteNews, getAllNews } from '../api/news/index'
+import { addNews, deleteNews, getAllNews, getAllNewsByEditor } from '../api/news/index'
 
 const router = useRouter()
+const route = useRoute()
 const emit = defineEmits(['closeLoading', 'openLoading'])
 
 // 新闻表头
 const news_col = [
     { idx: 1, label: '新闻ID' },
     { idx: 2, label: '新闻标题' },
-    // { idx: 3, label: '新闻预览' },
-    { idx: 4, label: '作者名称' },
-    { idx: 5, label: '点赞数' },
-    { idx: 6, label: '收藏数' },
-    { idx: 7, label: '创建时间' }
+    { idx: 3, label: '作者名称' },
+    { idx: 4, label: '点赞数' },
+    { idx: 5, label: '收藏数' },
+    { idx: 6, label: '创建时间' }
 ]
 
 // 新闻表格数据
@@ -104,15 +104,14 @@ let tableData: News[] = reactive([])
 const addRow = () => {
     // 添加空白新闻
     addNews().then((result) => {
-        router.push(`/admin/editor/${result}`)
+        router.push(`/editor/news/editor/${result}`)
     })
 }
 
 // 进入新闻修改页面
 const editFnc = (scope: any) => {
-    //  path: '/admin/editor/:news_id/:news_title/:news_writer_name/:news_praise_number/:news_star_number/:news_created_time/:news_dps',
     router.push(
-        `/admin/editor/${scope.row.news_id}/${scope.row.news_title}/${scope.row.news_writer_name}/${scope.row.news_praise_number}/${scope.row.news_star_number}/${scope.row.news_created_time}/${tableData[scope.$index].news_dps}`
+        `/editor/news/editor/${scope.row.news_id}/${scope.row.news_title}/${scope.row.news_writer_name}/${scope.row.news_praise_number}/${scope.row.news_star_number}/${scope.row.news_created_time}/${tableData[scope.$index].news_dps}`
     )
 }
 // 删除数据
@@ -127,24 +126,48 @@ const handleDelete = (index: any, row: any) => {
 const getData = () => {
     emit('openLoading')
 
-    // 得到所有的新闻数据
-    getAllNews()
-        .then((result) => {
-            tableData.push(...result)
-        })
-        .catch((err) => {
-            ElMessage.error('新闻信息获取失败')
-            throw err
-        })
-        .finally(() => {
-            for (let index in tableData) {
-                // 拼接日期字符串
-                const date = new Date(tableData[index].news_created_time as string)
-                tableData[index].date_string =
-                    `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
-            }
-            emit('closeLoading')
-        })
+    if (route.fullPath.includes('/admin/news')) {
+        // console.log(route.fullPath)
+        getAllNews()
+            .then((result) => {
+                tableData.push(...result)
+            })
+            .catch((err) => {
+                ElMessage.error('新闻信息获取失败')
+                throw err
+            })
+            .finally(() => {
+                for (let index in tableData) {
+                    // 拼接日期字符串
+                    const date = new Date(tableData[index].news_created_time as string)
+                    tableData[index].date_string =
+                        `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
+                }
+                // console.log(tableData)
+
+                emit('closeLoading')
+            })
+    } else {
+        getAllNewsByEditor()
+            .then((result) => {
+                tableData.push(...result)
+            })
+            .catch((err) => {
+                ElMessage.error('新闻信息获取失败')
+                throw err
+            })
+            .finally(() => {
+                for (let index in tableData) {
+                    // 拼接日期字符串
+                    const date = new Date(tableData[index].news_created_time as string)
+                    tableData[index].date_string =
+                        `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
+                }
+                // console.log(tableData)
+
+                emit('closeLoading')
+            })
+    }
 }
 
 // 生命周期创建

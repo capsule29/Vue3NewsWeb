@@ -12,6 +12,7 @@ const getAuthority = async (): Promise<Authority[]> => {
     await axios
         .get('/api/authority/select')
         .then((solution) => {
+            console.log(solution)
             data.push(...solution.data)
         })
         .catch((err) => {

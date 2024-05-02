@@ -214,6 +214,7 @@ const getData = () => {
         getNewsById(editNews.news_id)
             .then((result) => {
                 editNews.news_content = result.news_content
+                // ElMessage.success('获取成功')
             })
             .catch((err) => {
                 throw err
