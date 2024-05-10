@@ -3,10 +3,10 @@
     <el-card shadow="hover" style="margin-bottom: 10px">
         <template #header>{{ `焦点新闻Top${index + 1}` }}</template>
 
-        {{ news.news_title }}
+        {{ props.news.news_title }}
         <br />
-        <el-text size="small" line-clamp="3">
-            <span v-html="news.news_content"></span>
+        <el-text size="small" line-clamp="4">
+            <span v-html="props.news.news_content"></span>
         </el-text>
     </el-card>
 </template>
@@ -18,7 +18,7 @@ import { onMounted } from 'vue'
 // const store = useNewsStore()
 import { News } from '../api/news/NewsModel'
 
-defineProps<{
+const props = defineProps<{
     index: number
     news: News
 }>()

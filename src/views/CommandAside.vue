@@ -50,7 +50,7 @@
         </router-link> -->
 
         <router-link to="/news/all">
-            <el-menu-item index="4">
+            <el-menu-item index="5">
                 <el-icon><Monitor /></el-icon>
                 <span>浏览新闻网</span>
             </el-menu-item>

@@ -5,16 +5,13 @@
             <el-card>
                 <!-- 无限滚动新闻卡片 -->
                 <ul v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
-                    <li :key="index" v-for="(item, index) in news_list">
+                    <li :key="item.news_id" v-for="(item, index) in news_list">
                         <NewsCard
                             @click="newsDetail(item)"
                             :flag="true"
                             :news="item"
                             v-if="index <= count"
-                            @star="() => (news_list[index].news_star_number += 1)"
-                            @destar="() => (news_list[index].news_star_number -= 1)"
-                            @praise="() => (news_list[index].news_praise_number += 1)"
-                            @depraise="() => (news_list[index].news_praise_number -= 1)"
+                            :index="index"
                         />
                         <br />
                     </li>
@@ -45,7 +42,6 @@
 <script setup lang="ts">
 //#region 导入
 import { ref, reactive, computed, onBeforeMount } from 'vue'
-import { getCookie } from 'typescript-cookie'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 import { useNewsStore, useNewsListStore } from '../store'
@@ -56,13 +52,12 @@ import NewsAside from '../views/NewsAside.vue'
 import NewsCard from '../components/NewsCard.vue'
 import { getNewsCanSee } from '../api/news/index'
 import type { News } from '../api/news/NewsModel'
-
 //#endregion
 
 //#region 无限滚动
 const count = ref(5)
 const loading = ref(false)
-const noMore = computed(() => count.value >= news_list.length)
+const noMore = computed(() => count.value >= news_list.value.length)
 const disabled = computed(() => loading.value || noMore.value)
 const load = () => {
     loading.value = true
@@ -79,18 +74,15 @@ const newsDetail = (news: News) => {
     router.push(`/news/detail`)
 }
 //#endregion
-
 let newsAsides: News[] = reactive([])
-const news_list: News[] = reactive([])
-
+// let news_list: News[] = reactive([])
+let news_list = computed(() => NewsListStore.getNewsList())
 //#region 初始化
 const getData = () => {
-    const department_id: number = Number(getCookie('department_id'))
-    getNewsCanSee(department_id).then((result) => {
-        // console.log(result)
-
+    getNewsCanSee().then((result) => {
         NewsListStore.setNewsList(result)
-        news_list.push(...NewsListStore.getNewsList())
+        // news_list.value.push(...NewsListStore.getNewsList())
+        // 侧边栏
         const news_data_listTemp = []
         news_data_listTemp.push(...result)
         news_data_listTemp.sort((a, b) => {
@@ -103,7 +95,6 @@ const getData = () => {
         }
     })
 }
-
 onBeforeMount(() => {
     getData()
 })

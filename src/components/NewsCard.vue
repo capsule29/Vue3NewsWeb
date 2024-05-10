@@ -1,3 +1,5 @@
+<!-- src\pages\NewsMain.vue -->
+<!-- src\views\NewsDetail.vue -->
 <!-- 新闻卡片 -->
 <template>
     <el-card shadow="never">
@@ -52,7 +54,7 @@
                             style="min-width: 120px"
                             :plain="!is_praise"
                             type="primary"
-                            @click="clickPraise()"
+                            @click.prevent="clickPraise()"
                         >
                             <el-icon class="el-icon--left"> <ArrowUpBold /> </el-icon>
                             <span v-if="is_praise">取消</span>点赞
@@ -65,7 +67,7 @@
                             style="min-width: 120px"
                             :plain="!is_star"
                             type="primary"
-                            @click="clickStar()"
+                            @click.prevent="clickStar()"
                         >
                             <el-icon class="el-icon--left">
                                 <StarFilled v-if="is_star" /> <Star v-else />
@@ -103,27 +105,47 @@ const NewsStore = useNewsStore()
 import NewsCommentView from '../components/NewsComment.vue'
 import { depraiseNews, destarNews, praiseNews, starNews } from '../api/news'
 import { News } from '../api/news/NewsModel'
+import { addNewsStar, removeNewsStar } from '../api/newsStar'
 /* ====================NewsMain组件传参==================== */
 const props = defineProps<{
+    index?: number
     news: News
     /**
-     * @description 判断是在/news/all 还是 /news/detail
-     *                          true            false
+     * @description 判断是在/news/all（true） 还是 /news/detail（false）
      */
     flag: boolean
 }>()
 let is_open_comment_status: Ref<boolean> = ref(props.flag == false ? true : false)
 
-const emit = defineEmits(['click', 'praise', 'depraise', 'star', 'destar'])
+// src\pages\NewsMain.vue
+const emit = defineEmits(['click'])
 //#region 点赞收藏
+
+// 该新闻是否被用户收藏
+let is_star: Ref<boolean> = ref(props.news.is_stared)
+// 该新闻是否被用户点赞
+let is_praise: Ref<boolean> = ref(false)
+
 const clickPraise = () => {
     if (!is_praise.value) {
         // 未点赞 -> 已点赞
-        emit('praise')
+        // 显示数字+1
+        news_data.news_praise_number += 1
+        // if (props.flag == true) {
+        //     NewsListStore.addPraise(props.index)
+        // } else if (props.flag == false) {
+        //     NewsStore.addPraise()
+        // }
         praiseNews(news_data.news_id)
     } else {
         //  已点赞 -> 未点赞
-        emit('depraise')
+        // 显示数字-1
+        news_data.news_praise_number -= 1
+        // if (props.flag == true) {
+        //     NewsListStore.reducePraise(props.index)
+        // } else if (props.flag == false) {
+        //     NewsStore.reducePraise()
+        // }
         depraiseNews(news_data.news_id)
     }
     is_praise.value = !is_praise.value
@@ -131,32 +153,44 @@ const clickPraise = () => {
 const clickStar = () => {
     if (!is_star.value) {
         // 未收藏 -> 已收藏
-        emit('star')
-        starNews(news_data.news_id)
+        // 显示数字+1
+        news_data.news_star_number += 1
+        // if (props.flag == true) {
+        // NewsListStore.addStar(props.index)
+        // NewsListStore.changeStared(props.index)
+        // } else if (props.flag == false) {
+        // NewsStore.addStar()
+        // NewsStore.changeStared()
+        // }
+        addNewsStar(props.news.news_id) // 添加news_star表项
+        starNews(props.news.news_id) // 数据库新闻点赞数+1
     } else {
         //  已收藏 -> 未收藏
-        emit('destar')
-        destarNews(news_data.news_id)
+        // 显示数字-1
+        news_data.news_star_number -= 1
+        // if (props.flag == true) {
+        // NewsListStore.reduceStar(props.index)
+        // NewsListStore.changeStared(props.index)
+        // } else if (props.flag == false) {
+        // NewsStore.reduceStar()
+        // NewsStore.changeStared()
+        // }
+        removeNewsStar(props.news.news_id) // 删除news_star表项
+        destarNews(props.news.news_id) // 数据库新闻点赞数-1
     }
     is_star.value = !is_star.value
 }
 //#endregion
 
-// 该新闻是否被用户收藏
-let is_star: Ref<boolean> = ref(false)
-// 该新闻是否被用户点赞
-let is_praise: Ref<boolean> = ref(false)
-
 let news_data: News = reactive({} as News)
 let dateStr: Ref<string> = ref('')
-
 onBeforeMount(() => {
     if (props.flag == true) {
         news_data = props.news
     } else {
         news_data = NewsStore.getNews() // storeToRefs(NewsStore)
     }
-    const date = new Date(news_data.news_created_time)
+    const date = new Date(NewsStore.getNews().news_created_time)
     dateStr.value = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
 })
 </script>

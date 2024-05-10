@@ -9,6 +9,17 @@
             <el-text style="margin-right: 50px" type="info"
                 >欢迎您，来自{{ getCookie('department_name') }}的{{ getCookie('user_name') }}
             </el-text>
+            <!-- 收藏切换开关 -->
+            <el-switch
+                v-if="route.fullPath.includes('/news/all')"
+                @change="change"
+                style="margin-right: 20px"
+                v-model="switch_value"
+                size="small"
+                active-text="收藏"
+                inactive-text="普通"
+            />
+
             <el-button
                 v-if="getCookie('authority_id') == '2'"
                 style="margin-right: 20px"
@@ -37,9 +48,28 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router'
 import { getCookie, removeCookie } from 'typescript-cookie'
+import { useNewsListStore } from '../store'
+const NewsListStore = useNewsListStore()
+import { ref } from 'vue'
+import { getAllStarNews } from '../api/newsStar'
+import { getNewsCanSee } from '../api/news'
 const router = useRouter()
 const route = useRoute()
 
+let switch_value = ref(false)
+
+const change = () => {
+    if (switch_value.value == true) {
+        getAllStarNews().then((result) => {
+            NewsListStore.setNewsList(result)
+        })
+    } else {
+        getNewsCanSee().then((result) => {
+            NewsListStore.setNewsList(result)
+        })
+    }
+    ElMessage.success('切换成功')
+}
 /**
  * 退出登录
  */

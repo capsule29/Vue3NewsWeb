@@ -150,16 +150,17 @@ const getAllNewsByEditor = async (): Promise<News[]> => {
 }
 
 /**
- * @description 得到该部门id能看到的新闻    SELECT news.*,user.user_name as news_writer_name
- * @param department_id
+ * @description 得到该部门id能看到的新闻+新闻作者名+该新闻是否被该用户收藏
  * @returns Promise<News[]>
  */
-const getNewsCanSee = async (department_id: number): Promise<News[]> => {
+const getNewsCanSee = async (): Promise<News[]> => {
+    const department_id = Number(getCookie('department_id'))
     const data: News[] = []
     await axios
         .get('/api/news/select/byUser', {
             params: {
-                department_id
+                department_id,
+                user_id: Number(getCookie('user_id'))
             }
         })
         .then((result) => {
@@ -221,6 +222,11 @@ const depraiseNews = (news_id: number) => {
             throw err
         })
 }
+/**
+ *
+ * @param news_id
+ * @description 数据库新闻点赞数+1
+ */
 const starNews = (news_id: number) => {
     axios
         .get('/api/news/star', {
@@ -236,6 +242,11 @@ const starNews = (news_id: number) => {
             throw err
         })
 }
+/**
+ *
+ * @param news_id
+ * @description 数据库新闻点赞数-1
+ */
 const destarNews = (news_id: number) => {
     axios
         .get('/api/news/depraise', {

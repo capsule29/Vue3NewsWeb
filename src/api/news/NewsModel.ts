@@ -10,6 +10,7 @@ interface News {
     //
     news_writer_name?: string
     date_string?: string
+    is_stared?: boolean
 }
 
 export type { News }
