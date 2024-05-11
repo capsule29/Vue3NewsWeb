@@ -223,9 +223,9 @@ const getData = () => {
         // 新增的新闻
         // 编辑新闻的参数
         editNews.news_id = Number(route.params.news_id)
-        editNews.news_title = '在此输入新闻标题'
+        editNews.news_title = ''
         editNews.news_writer_name = getCookie('user_name')
-        editNews.news_content = ''
+        editNews.news_content = '在此点击以输入标题'
         editNews.news_praise_number = 0
         editNews.news_star_number = 0
         editNews.news_created_time = new Date().toString()

@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { Names } from './index-name'
 import type { News } from 'api/news/NewsModel'
-import { ElMessage } from 'element-plus'
 
+// NewsList
 export const useNewsListStore = defineStore(Names.NEWLIST, {
     state: () => {
         return {
@@ -25,15 +25,20 @@ export const useNewsListStore = defineStore(Names.NEWLIST, {
         },
         addStar: function (index: number) {
             this.news_list[index].news_star_number! += 1
-            ElMessage.success('storage +1成功')
         },
         reduceStar: function (index: number) {
             this.news_list[index].news_star_number! -= 1
-            ElMessage.success('storage -1成功')
+        },
+        changeStared: function (index: number) {
+            this.news_list[index].is_stared = !this.news_list[index].is_stared
+        },
+        changePraised: function (index: number) {
+            this.news_list[index].is_praised = !this.news_list[index].is_praised
         }
     }
 })
 
+// News
 export const useNewsStore = defineStore(Names.NEWS, {
     state: () => {
         return {
@@ -64,6 +69,12 @@ export const useNewsStore = defineStore(Names.NEWS, {
         },
         reduceStar: function () {
             this.news.news_star_number! -= 1
+        },
+        changeStared: function () {
+            this.news.is_stared = !this.news.is_stared
+        },
+        changePraised: function () {
+            this.news.is_praised = !this.news.is_praised
         }
     }
 })

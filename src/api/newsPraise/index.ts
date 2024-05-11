@@ -5,11 +5,11 @@ import { getCookie } from 'typescript-cookie'
 /**
  *
  * @param news_id
- * @description 在news_star表中添加数据
+ * @description 在news_praise表中添加数据
  */
-const addNewsStar = (news_id: number) => {
+const addNewsPraise = (news_id: number) => {
     const user_id = Number(getCookie('user_id'))
-    const api = '/api/news_star/add'
+    const api = '/api/news_praise/add'
     axios
         .get(api, {
             params: {
@@ -18,10 +18,10 @@ const addNewsStar = (news_id: number) => {
             }
         })
         .then(() => {
-            // ElMessage.success('在news_star表中添加数据成功')
+            // ElMessage.success('在news_praise表中添加数据成功')
         })
         .catch((err) => {
-            // ElMessage.error('在news_star表中添加数据失败')
+            // ElMessage.error('在news_praise表中添加数据失败')
             throw err
         })
 }
@@ -29,11 +29,11 @@ const addNewsStar = (news_id: number) => {
 /**
  *
  * @param news_id
- * @description 在news_star表中删除数据
+ * @description 在news_praise表中删除数据
  */
-const removeNewsStar = (news_id: number) => {
+const removeNewsPraise = (news_id: number) => {
     const user_id = Number(getCookie('user_id'))
-    const api = '/api/news_star/remove'
+    const api = '/api/news_praise/remove'
     axios
         .get(api, {
             params: {
@@ -42,21 +42,21 @@ const removeNewsStar = (news_id: number) => {
             }
         })
         .then(() => {
-            // ElMessage.success('在news_star表中删除数据成功')
+            // ElMessage.success('在news_praise表中删除数据成功')
         })
         .catch((err) => {
-            // ElMessage.error('在news_star表中删除数据失败')
+            // ElMessage.error('在news_praise表中删除数据失败')
             throw err
         })
 }
 
 /**
  *
- * @description 得到该用户所有收藏的新闻数据+该新闻是否被点赞
+ * @description 得到该用户所有收藏的新闻数据
  */
-const getAllStarNews = async (): Promise<News[]> => {
+const getAllPraiseNews = async (): Promise<News[]> => {
     const user_id = Number(getCookie('user_id'))
-    const api = '/api/news_star/all_news'
+    const api = '/api/news_praise/all_news'
     const data: News[] = []
     await axios
         .get(api, {
@@ -72,4 +72,4 @@ const getAllStarNews = async (): Promise<News[]> => {
         })
     return data
 }
-export { addNewsStar, removeNewsStar, getAllStarNews }
+export { addNewsPraise, removeNewsPraise, getAllPraiseNews }

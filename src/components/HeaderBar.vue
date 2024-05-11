@@ -21,7 +21,7 @@
             />
 
             <el-button
-                v-if="getCookie('authority_id') == '2'"
+                v-if="getCookie('authority_id') == '2' && !route.fullPath.includes('/editor/news')"
                 style="margin-right: 20px"
                 @click.prevent="$router.push('/editor')"
             >
@@ -60,10 +60,12 @@ let switch_value = ref(false)
 
 const change = () => {
     if (switch_value.value == true) {
+        //收藏模式
         getAllStarNews().then((result) => {
             NewsListStore.setNewsList(result)
         })
     } else {
+        //普通模式
         getNewsCanSee().then((result) => {
             NewsListStore.setNewsList(result)
         })

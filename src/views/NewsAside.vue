@@ -2,12 +2,15 @@
 <template>
     <el-card shadow="hover" style="margin-bottom: 10px">
         <template #header>{{ `焦点新闻Top${index + 1}` }}</template>
-
-        {{ props.news.news_title }}
+        <el-text tag="b" size="large" line-clamp="2">
+            {{ props.news.news_title }}
+        </el-text>
         <br />
-        <el-text size="small" line-clamp="4">
+        <el-text line-clamp="2">    
             <span v-html="props.news.news_content"></span>
         </el-text>
+        <br />
+        <el-text size="small">点赞数：{{ props.news.news_praise_number }} </el-text>
     </el-card>
 </template>
 

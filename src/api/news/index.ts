@@ -150,7 +150,7 @@ const getAllNewsByEditor = async (): Promise<News[]> => {
 }
 
 /**
- * @description 得到该部门id能看到的新闻+新闻作者名+该新闻是否被该用户收藏
+ * @description 得到该部门id能看到的新闻+新闻作者名+该新闻是否被该用户收藏+是否点赞
  * @returns Promise<News[]>
  */
 const getNewsCanSee = async (): Promise<News[]> => {
@@ -249,7 +249,7 @@ const starNews = (news_id: number) => {
  */
 const destarNews = (news_id: number) => {
     axios
-        .get('/api/news/depraise', {
+        .get('/api/news/destar', {
             params: {
                 news_id
             }

@@ -26,7 +26,7 @@
                     type="primary"
                     :underline="false"
                 >
-                    <el-text size="large" line-clamp="6">
+                    <el-text size="large" line-clamp="4">
                         <div v-html="news_data.news_content"></div>
                     </el-text>
                 </el-link>
@@ -52,12 +52,15 @@
                     <el-col :span="5">
                         <el-button
                             style="min-width: 120px"
-                            :plain="!is_praise"
+                            :plain="!props.news.is_praised"
                             type="primary"
                             @click.prevent="clickPraise()"
                         >
-                            <el-icon class="el-icon--left"> <ArrowUpBold /> </el-icon>
-                            <span v-if="is_praise">取消</span>点赞
+                            <el-icon class="el-icon--left">
+                                <ArrowDownBold v-if="props.news.is_praised" />
+                                <ArrowUpBold v-else-if="!props.news.is_praised" />
+                            </el-icon>
+                            <span v-if="props.news.is_praised">取消</span>点赞
                             {{ news_data.news_praise_number }}
                         </el-button>
                     </el-col>
@@ -65,14 +68,16 @@
                     <el-col :span="5">
                         <el-button
                             style="min-width: 120px"
-                            :plain="!is_star"
+                            :plain="!props.news.is_stared"
                             type="primary"
                             @click.prevent="clickStar()"
                         >
                             <el-icon class="el-icon--left">
-                                <StarFilled v-if="is_star" /> <Star v-else />
+                                <StarFilled v-if="props.news.is_stared" />
+                                <Star v-else-if="!props.news.is_stared" />
                             </el-icon>
-                            <span v-if="is_star">取消</span>收藏 {{ news_data.news_star_number }}
+                            <span v-if="props.news.is_stared">取消</span>收藏
+                            {{ news_data.news_star_number }}
                         </el-button>
                     </el-col>
                     <!-- 打开小评论区 -->
@@ -97,15 +102,23 @@
 <script setup lang="ts">
 /* ====================导入==================== */
 import { onBeforeMount, reactive, ref, type Ref } from 'vue'
-import { ArrowUpBold, Star, StarFilled, ChatLineSquare } from '@element-plus/icons-vue'
+import {
+    ArrowUpBold,
+    ArrowDownBold,
+    Star,
+    StarFilled,
+    ChatLineSquare
+} from '@element-plus/icons-vue'
 
-import { useNewsStore } from '../store'
+import { useNewsStore, useNewsListStore } from '../store'
 const NewsStore = useNewsStore()
+const NewsListStore = useNewsListStore()
 
 import NewsCommentView from '../components/NewsComment.vue'
 import { depraiseNews, destarNews, praiseNews, starNews } from '../api/news'
 import { News } from '../api/news/NewsModel'
 import { addNewsStar, removeNewsStar } from '../api/newsStar'
+import { addNewsPraise, removeNewsPraise } from '../api/newsPraise'
 /* ====================NewsMain组件传参==================== */
 const props = defineProps<{
     index?: number
@@ -121,64 +134,62 @@ let is_open_comment_status: Ref<boolean> = ref(props.flag == false ? true : fals
 const emit = defineEmits(['click'])
 //#region 点赞收藏
 
-// 该新闻是否被用户收藏
-let is_star: Ref<boolean> = ref(props.news.is_stared)
-// 该新闻是否被用户点赞
-let is_praise: Ref<boolean> = ref(false)
-
 const clickPraise = () => {
-    if (!is_praise.value) {
+    if (!props.news.is_praised) {
         // 未点赞 -> 已点赞
         // 显示数字+1
         news_data.news_praise_number += 1
-        // if (props.flag == true) {
-        //     NewsListStore.addPraise(props.index)
-        // } else if (props.flag == false) {
-        //     NewsStore.addPraise()
-        // }
-        praiseNews(news_data.news_id)
+        if (props.flag == true) {
+            NewsListStore.addPraise(props.index)
+            NewsListStore.changePraised(props.index)
+        } else if (props.flag == false) {
+            NewsStore.addPraise()
+            NewsStore.changePraised()
+        }
+        addNewsPraise(props.news.news_id) // 添加news_praise表项
+        praiseNews(news_data.news_id) // 数据库新闻点赞数+1
     } else {
         //  已点赞 -> 未点赞
         // 显示数字-1
         news_data.news_praise_number -= 1
-        // if (props.flag == true) {
-        //     NewsListStore.reducePraise(props.index)
-        // } else if (props.flag == false) {
-        //     NewsStore.reducePraise()
-        // }
-        depraiseNews(news_data.news_id)
+        if (props.flag == true) {
+            NewsListStore.reducePraise(props.index)
+            NewsListStore.changePraised(props.index)
+        } else if (props.flag == false) {
+            NewsStore.reducePraise()
+            NewsStore.changePraised()
+        }
+        removeNewsPraise(props.news.news_id) // 删除news_praise表项
+        depraiseNews(news_data.news_id) // 数据库新闻点赞数-1
     }
-    is_praise.value = !is_praise.value
 }
 const clickStar = () => {
-    if (!is_star.value) {
-        // 未收藏 -> 已收藏
-        // 显示数字+1
+    // 未收藏 -> 已收藏
+    if (!props.news.is_stared) {
         news_data.news_star_number += 1
-        // if (props.flag == true) {
-        // NewsListStore.addStar(props.index)
-        // NewsListStore.changeStared(props.index)
-        // } else if (props.flag == false) {
-        // NewsStore.addStar()
-        // NewsStore.changeStared()
-        // }
+        if (props.flag == true) {
+            NewsListStore.addStar(props.index)
+            NewsListStore.changeStared(props.index)
+        } else if (props.flag == false) {
+            NewsStore.addStar()
+            NewsStore.changeStared()
+        }
         addNewsStar(props.news.news_id) // 添加news_star表项
-        starNews(props.news.news_id) // 数据库新闻点赞数+1
-    } else {
-        //  已收藏 -> 未收藏
-        // 显示数字-1
-        news_data.news_star_number -= 1
-        // if (props.flag == true) {
-        // NewsListStore.reduceStar(props.index)
-        // NewsListStore.changeStared(props.index)
-        // } else if (props.flag == false) {
-        // NewsStore.reduceStar()
-        // NewsStore.changeStared()
-        // }
-        removeNewsStar(props.news.news_id) // 删除news_star表项
-        destarNews(props.news.news_id) // 数据库新闻点赞数-1
+        starNews(props.news.news_id) // 数据库新闻收藏数+1
     }
-    is_star.value = !is_star.value
+    //  已收藏 -> 未收藏
+    else {
+        news_data.news_star_number -= 1
+        if (props.flag == true) {
+            NewsListStore.reduceStar(props.index)
+            NewsListStore.changeStared(props.index)
+        } else if (props.flag == false) {
+            NewsStore.reduceStar()
+            NewsStore.changeStared()
+        }
+        removeNewsStar(props.news.news_id) // 删除news_star表项
+        destarNews(props.news.news_id) // 数据库新闻收藏数-1
+    }
 }
 //#endregion
 
@@ -190,7 +201,7 @@ onBeforeMount(() => {
     } else {
         news_data = NewsStore.getNews() // storeToRefs(NewsStore)
     }
-    const date = new Date(NewsStore.getNews().news_created_time)
+    const date = new Date(news_data.news_created_time)
     dateStr.value = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
 })
 </script>

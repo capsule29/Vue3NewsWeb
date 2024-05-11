@@ -3,22 +3,13 @@
     <el-divider />
     <el-row align="middle" justify="center">
         <el-col :span="23">
-            <el-input placeholder="留下一条善意的评论" v-model="comment_input">
+            <el-input
+                placeholder="留下一条善意的评论"
+                v-model="comment_input"
+                @keydown.enter="addCommentFnc"
+            >
                 <template #append>
-                    <el-button
-                        @click.prevent="
-                            addComment(props.news_id, Number(getCookie('user_id')), comment_input),
-                                commentData.unshift({
-                                    user_id: Number(getCookie('user_id')),
-                                    user_name: getCookie('user_name'),
-                                    comment_content: comment_input,
-                                    comment_created_time: new Date().toString()
-                                }),
-                                (comment_input = '')
-                        "
-                    >
-                        评论
-                    </el-button>
+                    <el-button @click.prevent="addCommentFnc"> 评论 </el-button>
                 </template>
             </el-input>
         </el-col>
@@ -59,6 +50,20 @@ const props = defineProps<{
 // 输入的评论
 let comment_input: Ref<string> = ref('')
 
+const addCommentFnc = () => {
+    if (comment_input.value != '') {
+        addComment(props.news_id, Number(getCookie('user_id')), comment_input.value),
+            commentData.unshift({
+                user_id: Number(getCookie('user_id')),
+                user_name: getCookie('user_name'),
+                comment_content: comment_input.value,
+                comment_created_time: new Date().toString()
+            }),
+            (comment_input.value = '')
+    } else {
+        ElMessage.error('评论为空')
+    }
+}
 // 该新闻评论列表
 const commentData: MyComment[] = reactive([])
 
