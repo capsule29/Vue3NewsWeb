@@ -138,7 +138,7 @@ const clickPraise = () => {
     if (!props.news.is_praised) {
         // 未点赞 -> 已点赞
         // 显示数字+1
-        news_data.news_praise_number += 1
+        // news_data.news_praise_number += 1
         if (props.flag == true) {
             NewsListStore.addPraise(props.index)
             NewsListStore.changePraised(props.index)
@@ -151,7 +151,7 @@ const clickPraise = () => {
     } else {
         //  已点赞 -> 未点赞
         // 显示数字-1
-        news_data.news_praise_number -= 1
+        // news_data.news_praise_number -= 1
         if (props.flag == true) {
             NewsListStore.reducePraise(props.index)
             NewsListStore.changePraised(props.index)
@@ -166,7 +166,7 @@ const clickPraise = () => {
 const clickStar = () => {
     // 未收藏 -> 已收藏
     if (!props.news.is_stared) {
-        news_data.news_star_number += 1
+        // news_data.news_star_number += 1
         if (props.flag == true) {
             NewsListStore.addStar(props.index)
             NewsListStore.changeStared(props.index)
@@ -179,7 +179,7 @@ const clickStar = () => {
     }
     //  已收藏 -> 未收藏
     else {
-        news_data.news_star_number -= 1
+        // news_data.news_star_number -= 1
         if (props.flag == true) {
             NewsListStore.reduceStar(props.index)
             NewsListStore.changeStared(props.index)
