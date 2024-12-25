@@ -1,7 +1,7 @@
 <template>
     <el-row justify="center">
         <el-col :span="20">
-            <NewsCard :flag="false" :news="NewsStore.getNews()"> </NewsCard>
+            <NewsCard :index="-1" :flag="false" :news="NewsStore.getNews()"> </NewsCard>
         </el-col>
     </el-row>
 </template>

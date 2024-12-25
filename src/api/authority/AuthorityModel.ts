@@ -1,6 +1,6 @@
 type Authority = {
     authority_id?: number
-    authority_name?: string
+    authority_name: string
 }
 
 interface NewAuthority extends Authority {

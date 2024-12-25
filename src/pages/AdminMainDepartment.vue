@@ -85,6 +85,7 @@ let tableData: Array<NewDepartment> = reactive([])
  */
 const addRow = () => {
     tableData.push({
+        department_id: -1,
         department_name: '',
         edit: true,
         flag: true

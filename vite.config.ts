@@ -28,10 +28,10 @@ export default defineConfig({
     // 开发环境有效
     server: {
         proxy: {
-            // http://localhost:5173/api ===> http://124.223.43.79:233
+            // http://localhost:5173/api ===> http://124.223.43.79:7776
             '/api': {
-                target: 'http://124.223.43.79:233', // 服务器
-                // target: '127.0.0.1:233', // 本地服务器
+                // target: 'http://124.223.43.79:7776', // 对公网
+                target: 'http://localhost:7776', // 本地服务器
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, '')
             }

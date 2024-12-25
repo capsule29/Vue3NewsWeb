@@ -7,6 +7,8 @@
             "path": "./tsconfig.app.json"
         }
     ],
-    "resolveJsonModule": true,
+    "compilerOptions": {
+        "resolveJsonModule": true,
+    },
     "esModuleInterop": true,
 }

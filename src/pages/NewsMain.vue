@@ -85,7 +85,7 @@ const getData = () => {
         // 侧边栏
         const news_data_listTemp = []
         news_data_listTemp.push(...result)
-        news_data_listTemp.sort((a, b) => {
+        news_data_listTemp.sort((a: News, b: News) => {
             // 从大到小
             return b.news_praise_number - a.news_praise_number
         })

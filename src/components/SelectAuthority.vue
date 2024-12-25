@@ -20,7 +20,7 @@ defineProps<{
 
 let authority_list: any[] = reactive([])
 onMounted(() => {
-    getAuthority().then((solution: []) => {
+    getAuthority().then((solution: Authority[]) => {
         authority_list.push(...solution)
     })
 })

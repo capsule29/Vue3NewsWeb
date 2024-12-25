@@ -53,6 +53,7 @@ const NewsListStore = useNewsListStore()
 import { ref } from 'vue'
 import { getAllStarNews } from '../api/newsStar'
 import { getNewsCanSee } from '../api/news'
+import { ElMessage } from "element-plus";
 const router = useRouter()
 const route = useRoute()
 

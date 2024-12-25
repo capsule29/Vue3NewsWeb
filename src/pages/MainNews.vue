@@ -82,6 +82,7 @@ import { useRouter, useRoute } from 'vue-router'
 
 import type { News } from '../api/news/NewsModel'
 import { addNews, deleteNews, getAllNews, getAllNewsByEditor } from '../api/news/index'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const route = useRoute()

@@ -75,7 +75,7 @@ onBeforeMount(() => {
                 // 放入右侧不可见部门列表
 
                 if (canTSeeDepartment.indexOf(element.department_id) != -1) {
-                    value.value.push(element.department_id)
+                    value.value.push(element.department_id as never)
                 }
             }
         })

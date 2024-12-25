@@ -192,7 +192,7 @@ const getLatestNewsId = async (): Promise<number> => {
 //#endregion
 
 //#region 点赞收藏
-const praiseNews = (news_id: number) => {
+const praiseNews = (news_id: number | undefined) => {
     axios
         .get('/api/news/praise', {
             params: {

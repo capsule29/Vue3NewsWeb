@@ -81,7 +81,7 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-import { MyComment } from '../api/comment/CommentModel'
+import { type MyComment } from '../api/comment/CommentModel'
 import { deleteComment, getCommentByNewsId } from '../api/comment'
 
 const comment_col = [

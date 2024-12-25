@@ -19,7 +19,7 @@ import { onMounted } from 'vue'
 
 // import { useNewsStore } from '../store'
 // const store = useNewsStore()
-import { News } from '../api/news/NewsModel'
+import { type News } from '../api/news/NewsModel'
 
 const props = defineProps<{
     index: number

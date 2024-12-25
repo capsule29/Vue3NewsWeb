@@ -86,12 +86,14 @@ interface RuleForm {
     user_name: string
     authority_id?: number
     password: string
+    authority_name: string
 }
 const ruleFormRef = ref<FormInstance>()
 // 表单数据
 const ruleForm = reactive<RuleForm>({
     user_name: '',
-    password: ''
+    password: '',
+    authority_name: ''
 })
 
 // 表单验证规则

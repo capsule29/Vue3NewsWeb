@@ -116,12 +116,12 @@ const NewsListStore = useNewsListStore()
 
 import NewsCommentView from '../components/NewsComment.vue'
 import { depraiseNews, destarNews, praiseNews, starNews } from '../api/news'
-import { News } from '../api/news/NewsModel'
+import { type News } from '../api/news/NewsModel'
 import { addNewsStar, removeNewsStar } from '../api/newsStar'
 import { addNewsPraise, removeNewsPraise } from '../api/newsPraise'
 /* ====================NewsMain组件传参==================== */
 const props = defineProps<{
-    index?: number
+    index: number
     news: News
     /**
      * @description 判断是在/news/all（true） 还是 /news/detail（false）

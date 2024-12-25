@@ -41,6 +41,7 @@ import { getCookie } from 'typescript-cookie'
 import CommentCard from '../components/NewsCommentCard.vue'
 import { getCommentByNewsId, addComment } from '../api/comment/index'
 import type { MyComment } from '../api/comment/CommentModel'
+import { ElMessage } from 'element-plus'
 
 // NewsMain传递的参数
 const props = defineProps<{
@@ -54,6 +55,8 @@ const addCommentFnc = () => {
     if (comment_input.value != '') {
         addComment(props.news_id, Number(getCookie('user_id')), comment_input.value),
             commentData.unshift({
+                comment_id: -1,
+                comment_praise_number: 0,
                 user_id: Number(getCookie('user_id')),
                 user_name: getCookie('user_name'),
                 comment_content: comment_input.value,

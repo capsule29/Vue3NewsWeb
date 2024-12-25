@@ -7,7 +7,7 @@ import { getCookie } from 'typescript-cookie'
  * @param news_id
  * @description 在news_praise表中添加数据
  */
-const addNewsPraise = (news_id: number) => {
+const addNewsPraise = (news_id: number | undefined) => {
     const user_id = Number(getCookie('user_id'))
     const api = '/api/news_praise/add'
     axios
