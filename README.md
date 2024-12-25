@@ -1,5 +1,15 @@
 # 基于Vue3的企业新闻网
 
+项目预览:http://124.223.43.79
+
+管理员账号、密码：admin admin
+
+编辑账号、密码：editor editor
+
+用户账号、密码：user user
+
+---
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
